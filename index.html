@@ -3,73 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Espaço Cris Calçados Multimarca</title>
-
     <link rel="stylesheet" href="style.css">
-
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- FontAwesome para os ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
 
-<header>
+    <!-- Cabeçalho Principal -->
+    <header>
+        <div class="top-bar">
+            Frete grátis para região (consulte condições) • Parcelamento em até 6x sem juros
+        </div>
+        <div class="main-header">
+            <div class="logo">
+                <h1>Espaço Cris</h1>
+                <span>Calçados Multimarca</span>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="O que você está procurando?">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <div class="header-actions">
+                <div class="cart-icon" onclick="toggleCart()">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span id="cartCount">0</span>
+                </div>
+            </div>
+        </div>
+        <nav class="categories-nav">
+            <a href="#" class="active">Lançamentos</a>
+            <a href="#">Sandálias</a>
+            <a href="#">Tamancos</a>
+            <a href="#">Rasteiras</a>
+            <a href="#">Salto Bloco</a>
+            <a href="#">Promoção</a>
+        </nav>
+    </header>
 
-<div class="logo">
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <section class="banner">
+            <h2>Conforto • Estilo • Qualidade</h2>
+            <p>Escolha seus calçados favoritos e monte seu look perfeito!</p>
+        </section>
 
-<h1>Espaço Cris Calçados Multimarca</h1>
+        <h3 class="section-title">Sandálias e Calçados em Destaque</h3>
 
-<p>Conforto • Estilo • Qualidade</p>
+        <!-- Vitrine de Produtos -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Os produtos são carregados via JavaScript -->
+        </div>
+    </main>
 
-</div>
+    <!-- Carrinho Lateral / Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h3>Seu Carrinho</h3>
+            <button onclick="toggleCart()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Itens do carrinho -->
+            <p class="empty-cart">Seu carrinho está vazio.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <strong id="cartTotal">R$ 0,00</strong>
+            </div>
+            <button class="checkout-btn" onclick="checkoutWhatsApp()">
+                <i class="fa-brands fa-whatsapp"></i> Finalizar Pedido no WhatsApp
+            </button>
+        </div>
+    </div>
 
-<div class="carrinho">
+    <!-- Botão Flutuante do WhatsApp -->
+    <a href="https://wa.me/55 27 99778-7772?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20calçados!" class="whatsapp-float" target="_blank">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
 
-<i class="fa-solid fa-cart-shopping"></i>
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2026 Espaço Cris Calçados Multimarca. Todos os direitos reservados.</p>
+    </footer>
 
-<span id="contador">0</span>
-
-</div>
-
-</header>
-
-
-<section class="banner">
-
-<h2>Bem-vindo(a)!</h2>
-
-<p>Escolha seus calçados favoritos.</p>
-
-</section>
-
-
-<section class="pesquisa">
-
-<input
-type="text"
-placeholder="Pesquisar produto...">
-
-</section>
-
-
-<section id="produtos" class="produtos">
-
-</section>
-
-
-<div class="whatsapp">
-
-<a href="#">
-
-<i class="fab fa-whatsapp"></i>
-
-</a>
-
-</div>
-
-
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
