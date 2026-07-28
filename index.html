@@ -3,18 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espaço Cris Calçados Multimarca</title>
+    <title>Espaço Cris Calçados</title>
     <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome para os ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Cabeçalho Principal -->
     <header>
-        <div class="top-bar">
-            Frete grátis para região (consulte condições) • Parcelamento em até 6x sem juros
-        </div>
+        <div class="top-bar">Frete grátis para região • Parcelamento em até 6x sem juros</div>
         <div class="main-header">
             <div class="logo">
                 <h1>Espaço Cris</h1>
@@ -24,39 +20,19 @@
                 <input type="text" id="searchInput" placeholder="O que você está procurando?">
                 <button><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-            <div class="header-actions">
-                <div class="cart-icon" onclick="toggleCart()">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span id="cartCount">0</span>
-                </div>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="cartCount">0</span>
             </div>
         </div>
-        <nav class="categories-nav">
-            <a href="#" class="active">Lançamentos</a>
-            <a href="#">Sandálias</a>
-            <a href="#">Tamancos</a>
-            <a href="#">Rasteiras</a>
-            <a href="#">Salto Bloco</a>
-            <a href="#">Promoção</a>
-        </nav>
     </header>
 
-    <!-- Conteúdo Principal -->
     <main class="container">
-        <section class="banner">
-            <h2>Conforto • Estilo • Qualidade</h2>
-            <p>Escolha seus calçados favoritos e monte seu look perfeito!</p>
-        </section>
-
-        <h3 class="section-title">Sandálias e Calçados em Destaque</h3>
-
-        <!-- Vitrine de Produtos -->
-        <div class="products-grid" id="productsGrid">
-            <!-- Os produtos são carregados via JavaScript -->
-        </div>
+        <h3 class="section-title">Lançamentos em Destaque</h3>
+        <div class="products-grid" id="productsGrid"></div>
     </main>
 
-    <!-- Carrinho Lateral / Modal -->
+    <!-- Carrinho Lateral -->
     <div class="cart-modal" id="cartModal">
         <div class="cart-header">
             <h3>Seu Carrinho</h3>
@@ -76,37 +52,12 @@
         </div>
     </div>
 
-    <!-- Botão Flutuante do WhatsApp Corrigido -->
-    <a href="https://wa.me/5527997787772?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20calçados!" class="whatsapp-float" target="_blank" title="Fale conosco no WhatsApp">
+    <a href="https://wa.me/5527997787772?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20calçados!" class="whatsapp-float" target="_blank">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
-    <!-- Rodapé Estilo Loja Profissional (Inspirado na referência) -->
     <footer>
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="#">Atendimento</a>
-                <a href="#">A empresa</a>
-                <a href="#">Condições gerais de compra</a>
-                <a href="#">Política de privacidade</a>
-                <a href="#">Troca e Devolução</a>
-            </div>
-
-            <div class="footer-social">
-                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-youtube"></i></a>
-                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
-            </div>
-
-            <div class="footer-info">
-                <p><strong>Espaço Cris Calçados Multimarca</strong></p>
-                <p>Atendimento via WhatsApp: (27) 99778-7772</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Espaço Cris Calçados Multimarca. Todos os direitos reservados.</p>
-        </div>
+        <p>&copy; 2026 Espaço Cris Calçados • WhatsApp: (27) 99778-7772</p>
     </footer>
 
     <script src="script.js"></script>
