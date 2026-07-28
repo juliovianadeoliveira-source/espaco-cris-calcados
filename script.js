@@ -1,4 +1,3 @@
-// Lista de produtos de exemplo (você pode alterar com as fotos e nomes reais depois)
 const products = [
     {
         id: 1,
@@ -30,20 +29,15 @@ const products = [
     }
 ];
 
-// Carrinho de compras na memória
 let cart = [];
-// Controle temporário de quantidade selecionada nos cards
 let productQuantities = {};
 
-// Inicializa a vitrine de produtos na tela
 function renderProducts(itemsToRender) {
     const grid = document.getElementById("productsGrid");
     grid.innerHTML = "";
 
     itemsToRender.forEach(product => {
-        // Quantidade atual selecionada no contador do card (padrão é 1 par)
         const qty = productQuantities[product.id] || 1;
-
         const card = document.createElement("div");
         card.classList.add("product-card");
 
@@ -54,7 +48,6 @@ function renderProducts(itemsToRender) {
                 <div class="product-price">R$ ${product.price.toFixed(2).replace('.', ',')}</div>
                 <div class="product-installment">${product.installment}</div>
                 
-                <!-- Botões de + e - estilo Shopee -->
                 <div class="quantity-control">
                     <button onclick="changeCardQty(${product.id}, -1)">-</button>
                     <span>${qty} par(es)</span>
@@ -70,7 +63,6 @@ function renderProducts(itemsToRender) {
     });
 }
 
-// Altera a quantidade no card antes de adicionar
 function changeCardQty(productId, change) {
     if (!productQuantities[productId]) {
         productQuantities[productId] = 1;
@@ -82,7 +74,6 @@ function changeCardQty(productId, change) {
     renderProducts(products);
 }
 
-// Adiciona o produto ao carrinho com a quantidade escolhida
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     const quantity = productQuantities[productId] || 1;
@@ -94,14 +85,11 @@ function addToCart(productId) {
         cart.push({ ...product, quantity: quantity });
     }
 
-    // Reseta o contador do card para 1
     productQuantities[productId] = 1;
-
     updateCartUI();
-    toggleCart(); // Abre o carrinho automaticamente para mostrar o produto
+    toggleCart();
 }
 
-// Atualiza a visualização do carrinho (contador e itens)
 function updateCartUI() {
     const cartCount = document.getElementById("cartCount");
     const cartItemsContainer = document.getElementById("cartItems");
@@ -139,7 +127,6 @@ function updateCartUI() {
     cartTotal.innerText = `R$ ${totalPrice.toFixed(2).replace('.', ',')}`;
 }
 
-// Altera quantidade diretamente no carrinho
 function updateCartItemQty(index, change) {
     cart[index].quantity += change;
     if (cart[index].quantity <= 0) {
@@ -148,13 +135,11 @@ function updateCartItemQty(index, change) {
     updateCartUI();
 }
 
-// Abre/Fecha o menu lateral do carrinho
 function toggleCart() {
     const cartModal = document.getElementById("cartModal");
     cartModal.classList.toggle("open");
 }
 
-// Finalizar pedido enviando os dados direto para o WhatsApp
 function checkoutWhatsApp() {
     if (cart.length === 0) {
         alert("Seu carrinho está vazio!");
@@ -173,17 +158,14 @@ function checkoutWhatsApp() {
     message += `%0A*Total do Pedido: R$ ${total.toFixed(2).replace('.', ',')}*%0A`;
     message += "Aguardando confirmação e instruções de entrega!";
 
-    // Substitua o número abaixo pelo seu WhatsApp com DDD (ex: 5511999999999)
-    const phoneNumber = "5500000000000"; 
+    const phoneNumber = "5527997787772"; 
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
 }
 
-// Barra de pesquisa dinâmica
 document.getElementById("searchInput").addEventListener("input", (e) => {
     const term = e.target.value.toLowerCase();
     const filtered = products.filter(p => p.name.toLowerCase().includes(term));
     renderProducts(filtered);
 });
 
-// Executa na carga inicial
 renderProducts(products);
