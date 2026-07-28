@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espaço Cris Calçados</title>
+    <title>Espaço Cris Calçados Multimarca</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
     <header>
-        <div class="top-bar">Frete grátis para região • Parcelamento em até 6x sem juros</div>
+        <div class="top-bar">Frete grátis para região (consulte condições) • Parcelamento em até 6x sem juros</div>
         <div class="main-header">
             <div class="logo">
                 <h1>Espaço Cris</h1>
@@ -25,10 +25,23 @@
                 <span id="cartCount">0</span>
             </div>
         </div>
+        <nav class="categories-nav">
+            <a href="#" class="active">Lançamentos</a>
+            <a href="#">Sandálias</a>
+            <a href="#">Tamancos</a>
+            <a href="#">Rasteiras</a>
+            <a href="#">Salto Bloco</a>
+            <a href="#">Promoção</a>
+        </nav>
     </header>
 
     <main class="container">
-        <h3 class="section-title">Lançamentos em Destaque</h3>
+        <section class="banner-destaque">
+            <h2>Conforto • Estilo • Qualidade</h2>
+            <p>Os melhores calçados para você arrasar em qualquer ocasião.</p>
+        </section>
+
+        <h3 class="section-title">Sandálias e Calçados em Destaque</h3>
         <div class="products-grid" id="productsGrid"></div>
     </main>
 
@@ -57,7 +70,11 @@
     </a>
 
     <footer>
-        <p>&copy; 2026 Espaço Cris Calçados • WhatsApp: (27) 99778-7772</p>
+        <div class="footer-content">
+            <p><strong>Espaço Cris Calçados Multimarca</strong></p>
+            <p>Atendimento via WhatsApp: (27) 99778-7772</p>
+            <p class="copy">&copy; 2026 Espaço Cris Calçados. Todos os direitos reservados.</p>
+        </div>
     </footer>
 
     <script src="script.js"></script>
