@@ -9,9 +9,35 @@
 </head>
 <body>
 
+    <!-- Pop-up de Desconto Inicial (Aparece ao abrir o site) -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-box">
+            <button class="popup-close" onclick="closePopup()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="popup-left"></div>
+            <div class="popup-right">
+                <h3>VOCÊ + ESPAÇO CRIS</h3>
+                <span>CADASTRE-SE E RECEBA</span>
+                <h2>5% OFF</h2>
+                <p>PARA ESCOLHER SEU NOVO CALÇADO FAVORITO.</p>
+                <input type="text" placeholder="Nome:">
+                <input type="email" placeholder="E-mail:">
+                <button onclick="closePopup()">ENVIAR</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Topo Estilo Grande Marca -->
     <div class="top-announcement">
-        Frete grátis para região (consulte condições) • Parcelamento em até 6x sem juros
+        3% de desconto no PIX • Frete grátis (consulte condições) • 10x sem juros no cartão de crédito
+    </div>
+
+    <!-- Barra de Marcas Flutuantes/Superiores -->
+    <div class="brands-bar">
+        <a href="#" onclick="filtrarMarca('Kolosh')">Kolosh</a>
+        <a href="#" onclick="filtrarMarca('Mississipi')">Mississipi</a>
+        <a href="#" onclick="filtrarMarca('Tanara')">Tanara</a>
+        <a href="#" onclick="filtrarMarca('Campesí')">Campesí</a>
+        <a href="#" onclick="filtrarMarca('Pink Cats')">Pink Cats</a>
     </div>
 
     <header class="site-header">
@@ -32,29 +58,35 @@
             </div>
         </div>
         <nav class="nav-menu">
-            <a href="#" class="active">Lançamentos</a>
-            <a href="#">Sandálias</a>
-            <a href="#">Promoção</a>
+            <a href="#" class="active">LANÇAMENTO</a>
+            <a href="#">BOTA</a>
+            <a href="#">SAPATO</a>
+            <a href="#">SANDÁLIA</a>
+            <a href="#">TÊNIS</a>
+            <a href="#">BOLSA</a>
+            <a href="#">ACESSÓRIOS</a>
+            <a href="#" style="color: #b83280;">PROMOÇÃO</a>
         </nav>
     </header>
 
-    <!-- Conteúdo Principal -->
+    <!-- Conteúdo Principal com Setinhas de Navegação -->
     <main class="main-content">
         <div class="container">
-            <div class="banner-box">
-                <h2>Coleção Destaque</h2>
-                <p>Encontre o seu estilo perfeito com conforto e qualidade.</p>
+            <div class="section-header-row">
+                <h3 class="title-section">Sandálias e Calçados em Destaque</h3>
+                <div class="carousel-arrows">
+                    <button onclick="rolarGrid(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button onclick="rolarGrid(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
             </div>
-
-            <h3 class="title-section">Sandálias e Calçados em Destaque</h3>
             
             <div class="products-grid" id="productsGrid">
-                <!-- Produtos injetados pelo script.js -->
+                <!-- Produtos carregados dinamicamente via script.js -->
             </div>
         </div>
     </main>
 
-    <!-- Seção Fique por Dentro (Baseada na Imagem 2) -->
+    <!-- Seção Fique por Dentro -->
     <section class="newsletter-section">
         <div class="newsletter-container">
             <h3><i class="fa-solid fa-envelope-open-text"></i> FIQUE POR DENTRO</h3>
@@ -64,12 +96,6 @@
                 <button type="button" class="newsletter-btn">ASSINAR</button>
             </div>
             <p class="newsletter-leg">Ao clicar em ASSINAR declaro que concordo em receber novidades e promoções do Espaço Cris. Confira nossa <a href="#">Política de privacidade</a>.</p>
-        </div>
-
-        <div class="seo-text-block">
-            <h4>Apaixonada por sapatos femininos? O Espaço Cris te ajuda a encontrar o seu match!</h4>
-            <p>Seja qual for o seu estilo, temos o sapato feminino perfeito para você. Conheça nossa coleção completa e apaixone-se por modelos que combinam estilo, conforto e qualidade.</p>
-            <p>Do estilo street ao artesanal, criamos itens modernos, despojados, versáteis e muito confortáveis para você arrasar em qualquer ocasião.</p>
         </div>
     </section>
 
@@ -98,7 +124,7 @@
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
-    <!-- Rodapé Completo Idêntico ao Modelo da Imagem 1 -->
+    <!-- Rodapé Completo IDÊNTICO À SUA FOTO -->
     <footer class="site-footer">
         <div class="footer-inner">
             <div class="footer-links">
@@ -108,6 +134,7 @@
                 <a href="#">Política de privacidade</a>
                 <a href="#">Troca e Devolução</a>
                 <a href="#">Vale Presente</a>
+                <a href="#">Clube de Águias</a>
                 <a href="#">Sustentabilidade</a>
             </div>
 
@@ -118,31 +145,38 @@
                 <span class="pay-tag pix-tag">PIX</span>
                 <span class="pay-tag">MASTERCARD</span>
                 <span class="pay-tag">VISA</span>
+                <span class="pay-tag">VALE TROCA</span>
             </div>
 
             <div class="footer-social">
                 <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="#"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
                 <a href="#"><i class="fa-brands fa-tiktok"></i></a>
             </div>
 
             <div class="footer-divider"></div>
 
             <div class="footer-company-info">
-                <p>Espaço Cris Calçados Multimarca — CNPJ: 00.000.000/0001-00</p>
-                <p>Endereço: Rodovia do Sol, 000 — Vila Velha/ES — CEP: 29100-000</p>
-                <p>Atendimento via WhatsApp: (27) 99778-7772 (Segunda a sexta-feira)</p>
+                <p>Espaço Cris Calçados Multimarca — CNPJ: 00.942.669/0005-16</p>
+                <p>Endereço: Rodovia do Sol, 3667 — Vila Velha/ES — CEP: 29100-000</p>
+                <p>Atendimento telefônico Loja Virtual / Loja Física: (27) 99778-7772</p>
+            </div>
+
+            <div class="footer-bottom-buttons">
+                <button class="footer-action-btn">Central de atendimento</button>
+                <button class="footer-action-btn">Mapa do site</button>
             </div>
 
             <div class="footer-seals-grid">
                 <div class="seal-col">
                     <span class="seal-title">AVALIAÇÃO DOS CONSUMIDORES</span>
-                    <div class="seal-box">⭐⭐⭐⭐⭐ 4.9</div>
+                    <div class="seal-box">⭐⭐⭐⭐⭐ 4.9 (Avaliações Confiáveis)</div>
                 </div>
                 <div class="seal-col">
                     <span class="seal-title">REPUTAÇÃO</span>
-                    <div class="seal-box">RA1000 / Loja Confiável</div>
+                    <div class="seal-box">🏆 RA1000 / Loja Confiável</div>
                 </div>
                 <div class="seal-col">
                     <span class="seal-title">DADOS CRIPTOGRAFADOS</span>
@@ -150,7 +184,7 @@
                 </div>
                 <div class="seal-col">
                     <span class="seal-title">PLATAFORMA</span>
-                    <div class="seal-box">⚡ Espaço Cris E-commerce</div>
+                    <div class="seal-box">⚡ VTEX / Espaço Cris</div>
                 </div>
             </div>
         </div>
