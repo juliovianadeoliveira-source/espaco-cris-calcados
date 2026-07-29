@@ -7,32 +7,67 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Destaque exclusivo para a aba das setinhas do carrossel */
-        .carousel-arrows {
-            display: flex;
-            gap: 8px;
-            background: #fff0f6;
-            padding: 6px 12px;
-            border-radius: 30px;
-            border: 1px solid #ffb6c1;
-            box-shadow: 0 4px 10px rgba(184, 50, 128, 0.15);
+        /* Estilo para as fotos e setinhas dentro do próprio card de produto */
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background-color: #f9f9f9;
         }
-        .carousel-arrows button {
-            background: #b83280;
-            color: white;
+        .product-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        .product-image-container img.active {
+            display: block;
+        }
+        .card-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s, background 0.2s;
+            color: #333;
+            font-size: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background 0.2s;
+            z-index: 2;
         }
-        .carousel-arrows button:hover {
-            background: #962568;
-            transform: scale(1.1);
+        .card-arrow:hover {
+            background: #fff;
+            color: #b83280;
+        }
+        .card-arrow.prev { left: 10px; }
+        .card-arrow.next { right: 10px; }
+
+        /* Bolinhas indicadoras de fotos no card */
+        .card-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 2;
+        }
+        .card-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.3);
+        }
+        .card-dot.active {
+            background: #333;
         }
     </style>
 </head>
@@ -89,10 +124,6 @@
         <div class="container">
             <div class="section-header-row">
                 <h3 class="title-section" id="sectionTitle">Lançamentos em Destaque</h3>
-                <div class="carousel-arrows">
-                    <button onclick="rolarGrid(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-                    <button onclick="rolarGrid(1)"><i class="fa-solid fa-chevron-right"></i></button>
-                </div>
             </div>
             
             <div class="products-grid" id="productsGrid">
@@ -173,24 +204,76 @@
         </div>
     </footer>
 
-    <!-- Script de Lógica, Filtros e Carrossel -->
+    <!-- Script de Lógica, Filtros e Galeria por Card -->
     <script>
         const produtos = [
-            { id: 1, nome: "Sandália Rasteira Minimalista Chic", preco: 89.90, categoria: "lancamento", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 2, nome: "Sandália Salto Bloco Elegance", preco: 149.90, categoria: "promocao", promocao: true, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 3, nome: "Sandália Anabela Tressê", preco: 179.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 4, nome: "Sandália de Salto Fino Glamour", preco: 199.90, categoria: "promocao", promocao: true, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 5, nome: "Sandália Rasteira com Pedrarias", preco: 119.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 6, nome: "Sandália Plataforma Summer", preco: 159.90, categoria: "lancamento", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 7, nome: "Sandália Papete Confort Casual", preco: 129.90, categoria: "promocao", promocao: true, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 8, nome: "Sandália Slide Moderna Nude", preco: 99.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 9, nome: "Sandália Salto Geométrico Verniz", preco: 189.90, categoria: "lancamento", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 10, nome: "Sandália Rasteira de Amarrar", preco: 89.90, categoria: "promocao", promocao: true, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 11, nome: "Sandália Salto Médio Conforto", preco: 139.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 12, nome: "Sandália Rasteira Couro Legítimo", preco: 115.00, categoria: "lancamento", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 13, nome: "Sandália Festa Tiras Strass", preco: 219.90, categoria: "promocao", promocao: true, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 14, nome: "Sandália Rasteira Metalizada Ouro", preco: 94.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 15, nome: "Sandália Plataforma Corda", preco: 169.90, categoria: "lancamento", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" }
+            { 
+                id: 1, 
+                nome: "Sandália Rasteira Minimalista Chic", 
+                preco: 89.90, 
+                categoria: "lancamento", 
+                promocao: false, 
+                imagens: [
+                    "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80"
+                ] 
+            },
+            { 
+                id: 2, 
+                nome: "Sandália Salto Bloco Elegance", 
+                preco: 149.90, 
+                categoria: "promocao", 
+                promocao: true, 
+                imagens: [
+                    "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80"
+                ] 
+            },
+            { 
+                id: 3, 
+                nome: "Sandália Anabela Tressê", 
+                preco: 179.90, 
+                categoria: "sandalia", 
+                promocao: false, 
+                imagens: [
+                    "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80"
+                ] 
+            },
+            { 
+                id: 4, 
+                nome: "Sandália de Salto Fino Glamour", 
+                preco: 199.90, 
+                categoria: "promocao", 
+                promocao: true, 
+                imagens: [
+                    "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80"
+                ] 
+            },
+            { 
+                id: 5, 
+                nome: "Sandália Rasteira com Pedrarias", 
+                preco: 119.90, 
+                categoria: "sandalia", 
+                promocao: false, 
+                imagens: [
+                    "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80"
+                ] 
+            },
+            { 
+                id: 6, 
+                nome: "Sandália Plataforma Summer", 
+                preco: 159.90, 
+                categoria: "lancamento", 
+                promocao: false, 
+                imagens: [
+                    "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80"
+                ] 
+            }
         ];
 
         let carrinho = [];
@@ -209,10 +292,27 @@
 
             listaParaRenderizar.forEach(prod => {
                 const parcelamento = (prod.preco / 6).toFixed(2).replace('.', ',');
+                
+                // Cria as tags de imagens e bolinhas do carrossel interno do card
+                let imagensHtml = '';
+                let dotsHtml = '';
+                prod.imagens.forEach((img, index) => {
+                    const activeClass = index === 0 ? 'active' : '';
+                    imagensHtml += `<img src="${img}" alt="${prod.nome}" class="${activeClass}" data-index="${index}">`;
+                    dotsHtml += `<div class="card-dot ${activeClass}" data-index="${index}"></div>`;
+                });
+
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
-                    <img src="${prod.imagem}" alt="${prod.nome}" class="product-image">
+                    <div class="product-image-container" id="img-container-${prod.id}">
+                        <button class="card-arrow prev" onclick="mudarFotoCard(${prod.id}, -1)"><i class="fa-solid fa-chevron-left"></i></button>
+                        ${imagensHtml}
+                        <button class="card-arrow next" onclick="mudarFotoCard(${prod.id}, 1)"><i class="fa-solid fa-chevron-right"></i></button>
+                        <div class="card-dots" id="dots-${prod.id}">
+                            ${dotsHtml}
+                        </div>
+                    </div>
                     <div class="product-info">
                         <h4 class="product-title">${prod.nome}</h4>
                         <div class="product-price">R$ ${prod.preco.toFixed(2).replace('.', ',')}</div>
@@ -226,6 +326,38 @@
                     </div>
                 `;
                 grid.appendChild(card);
+                // Salva o índice atual da imagem no elemento
+                document.getElementById(`img-container-${prod.id}`).dataset.currentIndex = 0;
+            });
+        }
+
+        // Função que muda a foto do card ao clicar nas setinhas `<` ou `>` dele
+        function mudarFotoCard(idProd, direcao) {
+            const container = document.getElementById(`img-container-${idProd}`);
+            const prod = produtos.find(p => p.id === idProd);
+            let currentIndex = parseInt(container.dataset.currentIndex);
+            
+            currentIndex += direcao;
+            if (currentIndex < 0) {
+                currentIndex = prod.imagens.length - 1;
+            } else if (currentIndex >= prod.imagens.length) {
+                currentIndex = 0;
+            }
+            
+            container.dataset.currentIndex = currentIndex;
+
+            // Atualiza imagens visíveis
+            const imgs = container.querySelectorAll('img');
+            imgs.forEach((img, idx) => {
+                if (idx === currentIndex) img.classList.add('active');
+                else img.classList.remove('active');
+            });
+
+            // Atualiza bolinhas indicadoras
+            const dots = container.querySelectorAll('.card-dot');
+            dots.forEach((dot, idx) => {
+                if (idx === currentIndex) dot.classList.add('active');
+                else dot.classList.remove('active');
             });
         }
 
@@ -283,7 +415,7 @@
             if (itemExistente) {
                 itemExistente.qtd += qtd;
             } else {
-                carrinho.push({ ...prod, qtd });
+                carrinho.push({ ...prod, imagem: prod.imagens[0], qtd });
             }
             
             atualizarCarrinho();
@@ -361,17 +493,7 @@
             window.open(url, '_blank');
         }
 
-        // Função corrigida para mover exatamente a largura de um card por clique nas setinhas
-        function rolarGrid(direcao) {
-            const grid = document.getElementById('productsGrid');
-            const primeiroCard = grid.querySelector('.product-card');
-            if (!primeiroCard) return;
-            const larguraCard = primeiroCard.offsetWidth + 20; // largura do card + espaçamento (gap)
-            grid.scrollBy({ left: direcao * larguraCard, behavior: 'smooth' });
-        }
-
         window.onload = function() {
-            // Inicializa mostrando apenas os lançamentos
             const lancamentosIniciais = produtos.filter(p => p.categoria === 'lancamento');
             renderizarProdutos(lancamentosIniciais);
         };
