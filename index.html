@@ -38,7 +38,7 @@
                 <span>Calçados Multimarca</span>
             </div>
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="O que você está procurando?">
+                <input type="text" id="searchInput" placeholder="O que você está procurando?" oninput="filtrarProdutos()">
                 <button><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
             <div class="header-actions">
@@ -49,9 +49,9 @@
             </div>
         </div>
         <nav class="nav-menu">
-            <a href="#" class="active">LANÇAMENTO</a>
-            <a href="#">SANDÁLIA</a>
-            <a href="#" style="color: #b83280;">PROMOÇÃO</a>
+            <a href="#" class="active" onclick="filtrarPorCategoria('todos', event)">LANÇAMENTO</a>
+            <a href="#" onclick="filtrarPorCategoria('sandalia', event)">SANDÁLIA</a>
+            <a href="#" style="color: #b83280;" onclick="filtrarPorCategoria('promocao', event)">PROMOÇÃO</a>
         </nav>
     </header>
 
@@ -59,7 +59,7 @@
     <main class="main-content">
         <div class="container">
             <div class="section-header-row">
-                <h3 class="title-section">Sandálias e Calçados em Destaque</h3>
+                <h3 class="title-section" id="sectionTitle">Sandálias e Calçados em Destaque</h3>
                 <div class="carousel-arrows">
                     <button onclick="rolarGrid(-1)"><i class="fa-solid fa-chevron-left"></i></button>
                     <button onclick="rolarGrid(1)"><i class="fa-solid fa-chevron-right"></i></button>
@@ -144,69 +144,76 @@
         </div>
     </footer>
 
-    <!-- Script de Lógica e Dados -->
+    <!-- Script de Lógica, Filtros e Carrossel -->
     <script>
         const produtos = [
-            { id: 1, nome: "Sandália Rasteira Minimalista Chic", preco: 89.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 2, nome: "Sandália Salto Bloco Elegance", preco: 149.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 3, nome: "Sandália Anabela Tressê", preco: 179.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 4, nome: "Sandália de Salto Fino Glamour", preco: 199.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 5, nome: "Sandália Rasteira com Pedrarias", preco: 119.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 6, nome: "Sandália Plataforma Summer", preco: 159.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 7, nome: "Sandália Papete Confort Casual", preco: 129.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 8, nome: "Sandália Slide Moderna Nude", preco: 99.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 9, nome: "Sandália Salto Geométrico Verniz", preco: 189.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 10, nome: "Sandália Rasteira de Amarrar", preco: 89.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 11, nome: "Sandália Salto Médio Conforto", preco: 139.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 12, nome: "Sandália Rasteira Couro Legítimo", preco: 115.00, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 13, nome: "Sandália Festa Tiras Strass", preco: 219.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 14, nome: "Sandália Rasteira Metalizada Ouro", preco: 94.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 15, nome: "Sandália Plataforma Corda", preco: 169.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 16, nome: "Sandália Salto Bloco Baixo", preco: 129.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 17, nome: "Sandália Rasteira Anatômica", preco: 79.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 18, nome: "Sandália Mule Salto Fino", preco: 189.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 19, nome: "Sandália Rasteira de Dedo Chic", preco: 85.00, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 20, nome: "Sandália Meia Pata Festa", preco: 239.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 21, nome: "Sandália Papete com Brilho", preco: 149.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 22, nome: "Sandália Salto Acrílico Transparente", preco: 199.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 23, nome: "Sandália Rasteira Cruzada", preco: 89.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 24, nome: "Sandália Salto Fino Verniz Preto", preco: 179.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 25, nome: "Sandália Rasteira Esferas", preco: 109.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 26, nome: "Sandália Flatform Esportiva Chic", preco: 159.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 27, nome: "Sandália Salto Bloco Médio Off-White", preco: 139.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 28, nome: "Sandália Rasteira Tiras Duplas", preco: 89.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 29, nome: "Sandália Salto Taça Metalizada", preco: 209.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 30, nome: "Sandália Rasteira Bico Fino", preco: 99.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 31, nome: "Sandália Anabela Cortiça", preco: 169.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 32, nome: "Sandália Rasteira com Fivelas", preco: 119.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 33, nome: "Sandália Salto Fino Amarração Tornozelo", preco: 189.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 34, nome: "Sandália Mule Salto Bloco", preco: 149.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 35, nome: "Sandália Rasteira Conforto Plus", preco: 85.00, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 36, nome: "Sandália Salto Baixo Tiras Delicadas", preco: 129.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 37, nome: "Sandália Rasteira Pedraria Luxo", preco: 139.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 38, nome: "Sandália Plataforma Tratorada", preco: 179.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 39, nome: "Sandália Salto Grosso Comfy", preco: 139.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 40, nome: "Sandália Rasteira Metalizada Prata", preco: 94.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 41, nome: "Sandália Salto Alto Meia Pata Verniz", preco: 229.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 42, nome: "Sandália Rasteira de Couro Pelica", preco: 125.00, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 43, nome: "Sandália Papete Acolchoada", preco: 159.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 44, nome: "Sandália Salto Geométrico Festa", preco: 199.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 45, nome: "Sandália Rasteira Estilo Boho", preco: 99.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 46, nome: "Sandália Salto Bloco com Tachas", preco: 169.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 47, nome: "Sandália Rasteira Tressê Bege", preco: 109.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
-            { id: 48, nome: "Sandália Salto Fino Elegance Rosê", preco: 179.90, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-            { id: 49, nome: "Sandália Rasteira Amarração PomPom", preco: 89.90, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
-            { id: 50, nome: "Sandália Coleção Especial Espaço Cris", preco: 249.90, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" }
+            { id: 1, nome: "Sandália Rasteira Minimalista Chic", preco: 89.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 2, nome: "Sandália Salto Bloco Elegance", preco: 149.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 3, nome: "Sandália Anabela Tressê", preco: 179.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 4, nome: "Sandália de Salto Fino Glamour", preco: 199.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 5, nome: "Sandália Rasteira com Pedrarias", preco: 119.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 6, nome: "Sandália Plataforma Summer", preco: 159.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 7, nome: "Sandália Papete Confort Casual", preco: 129.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 8, nome: "Sandália Slide Moderna Nude", preco: 99.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 9, nome: "Sandália Salto Geométrico Verniz", preco: 189.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 10, nome: "Sandália Rasteira de Amarrar", preco: 89.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 11, nome: "Sandália Salto Médio Conforto", preco: 139.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 12, nome: "Sandália Rasteira Couro Legítimo", preco: 115.00, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 13, nome: "Sandália Festa Tiras Strass", preco: 219.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 14, nome: "Sandália Rasteira Metalizada Ouro", preco: 94.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 15, nome: "Sandália Plataforma Corda", preco: 169.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 16, nome: "Sandália Salto Bloco Baixo", preco: 129.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 17, nome: "Sandália Rasteira Anatômica", preco: 79.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 18, nome: "Sandália Mule Salto Fino", preco: 189.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 19, nome: "Sandália Rasteira de Dedo Chic", preco: 85.00, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 20, nome: "Sandália Meia Pata Festa", preco: 239.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 21, nome: "Sandália Papete com Brilho", preco: 149.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 22, nome: "Sandália Salto Acrílico Transparente", preco: 199.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 23, nome: "Sandália Rasteira Cruzada", preco: 89.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 24, nome: "Sandália Salto Fino Verniz Preto", preco: 179.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 25, nome: "Sandália Rasteira Esferas", preco: 109.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 26, nome: "Sandália Flatform Esportiva Chic", preco: 159.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 27, nome: "Sandália Salto Bloco Médio Off-White", preco: 139.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 28, nome: "Sandália Rasteira Tiras Duplas", preco: 89.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 29, nome: "Sandália Salto Taça Metalizada", preco: 209.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 30, nome: "Sandália Rasteira Bico Fino", preco: 99.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 31, nome: "Sandália Anabela Cortiça", preco: 169.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 32, nome: "Sandália Rasteira com Fivelas", preco: 119.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 33, nome: "Sandália Salto Fino Amarração Tornozelo", preco: 189.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 34, nome: "Sandália Mule Salto Bloco", preco: 149.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 35, nome: "Sandália Rasteira Conforto Plus", preco: 85.00, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 36, nome: "Sandália Salto Baixo Tiras Delicadas", preco: 129.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 37, nome: "Sandália Rasteira Pedraria Luxo", preco: 139.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 38, nome: "Sandália Plataforma Tratorada", preco: 179.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 39, nome: "Sandália Salto Grosso Comfy", preco: 139.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 40, nome: "Sandália Rasteira Metalizada Prata", preco: 94.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 41, nome: "Sandália Salto Alto Meia Pata Verniz", preco: 229.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 42, nome: "Sandália Rasteira de Couro Pelica", preco: 125.00, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 43, nome: "Sandália Papete Acolchoada", preco: 159.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 44, nome: "Sandália Salto Geométrico Festa", preco: 199.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 45, nome: "Sandália Rasteira Estilo Boho", preco: 99.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 1, nome: "Sandália Salto Bloco com Tachas", preco: 169.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 47, nome: "Sandália Rasteira Tressê Bege", preco: 109.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" },
+            { id: 48, nome: "Sandália Salto Fino Elegance Rosê", preco: 179.90, categoria: "sandalia", promocao: true, imagem: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
+            { id: 49, nome: "Sandália Rasteira Amarração PomPom", preco: 89.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80" },
+            { id: 50, nome: "Sandália Coleção Especial Espaço Cris", preco: 249.90, categoria: "sandalia", promocao: false, imagem: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=600&q=80" }
         ];
 
         let carrinho = [];
+        let categoriaAtual = 'todos';
 
-        function renderizarProdutos() {
+        function renderizarProdutos(listaParaRenderizar = produtos) {
             const grid = document.getElementById('productsGrid');
             if (!grid) return;
             
             grid.innerHTML = '';
-            produtos.forEach(prod => {
+            
+            if (listaParaRenderizar.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">Nenhum produto encontrado.</p>';
+                return;
+            }
+
+            listaParaRenderizar.forEach(prod => {
                 const parcelamento = (prod.preco / 6).toFixed(2).replace('.', ',');
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -228,8 +235,47 @@
             });
         }
 
+        function filtrarPorCategoria(cat, event) {
+            if (event) event.preventDefault();
+            categoriaAtual = cat;
+
+            // Atualizar classes ativas no menu
+            document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+
+            const titulo = document.getElementById('sectionTitle');
+
+            let filtrados = produtos;
+            if (cat === 'sandalia') {
+                filtrados = produtos.filter(p => p.categoria === 'sandalia');
+                titulo.innerText = "Sandálias em Destaque";
+            } else if (cat === 'promocao') {
+                filtrados = produtos.filter(p => p.promocao === true);
+                titulo.innerText = "Calçados em Promoção";
+            } else {
+                titulo.innerText = "Sandálias e Calçados em Destaque";
+            }
+
+            renderizarProdutos(filtrados);
+        }
+
+        function filtrarProdutos() {
+            const termo = document.getElementById('searchInput').value.toLowerCase();
+            let base = produtos;
+
+            if (categoriaAtual === 'sandalia') {
+                base = produtos.filter(p => p.categoria === 'sandalia');
+            } else if (categoriaAtual === 'promocao') {
+                base = produtos.filter(p => p.promocao === true);
+            }
+
+            const resultados = base.filter(p => p.nome.toLowerCase().includes(termo));
+            renderizarProdutos(resultados);
+        }
+
         function mudarQtd(id, delta) {
             const span = document.getElementById(`qtd-${id}`);
+            if(!span) return;
             let val = parseInt(span.innerText) + delta;
             if (val < 1) val = 1;
             span.innerText = val;
@@ -237,7 +283,8 @@
 
         function adicionarAoCarrinho(id) {
             const prod = produtos.find(p => p.id === id);
-            const qtd = parseInt(document.getElementById(`qtd-${id}`).innerText);
+            const qtdSpan = document.getElementById(`qtd-${id}`);
+            const qtd = qtdSpan ? parseInt(qtdSpan.innerText) : 1;
             
             const itemExistente = carrinho.find(item => item.id === id);
             if (itemExistente) {
