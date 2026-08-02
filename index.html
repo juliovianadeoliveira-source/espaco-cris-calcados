@@ -30,7 +30,7 @@ img { max-width: 100%; display: block; }
 .section-header-row { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
 .title-section { font-size: 22px; font-weight: 700; color: #2d2d2d; text-transform: uppercase; letter-spacing: 1px; }
 .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-.product-card { background: #fff; border: 1px solid #ece8e4; border-radius: 14px; overflow: hidden; transition: transform .25s, box-shadow .25s; position: relative; }
+.product-card { background: #fff; border: 1px solid #ece8e4; border-radius: 14px; overflow: hidden; transition: transform .25s, box-shadow .25s; }
 .product-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(0,0,0,.08); }
 .product-image-container { position: relative; width: 100%; height: 300px; overflow: hidden; background: #f9f9f9; }
 .product-image-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
@@ -57,12 +57,11 @@ img { max-width: 100%; display: block; }
 .tag-lancamento { position: absolute; top: 10px; left: 10px; background: #38a169; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; z-index: 2; }
 .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 100; }
 .popup-overlay.active { display: flex; }
-.popup-box { background: #fff; border-radius: 16px; padding: 28px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.2); position: relative; }
+.popup-box { background: #fff; border-radius: 16px; padding: 28px; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
 .popup-box h3 { font-size: 20px; color: #b83280; margin-bottom: 8px; }
 .popup-box p { font-size: 14px; color: #666; margin-bottom: 16px; }
 .popup-box input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; font-size: 14px; }
 .popup-box button { width: 100%; background: #b83280; color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; }
-.popup-close { position: absolute; top: 12px; right: 16px; font-size: 20px; color: #999; cursor: pointer; }
 .cart-sidebar { position: fixed; top: 0; right: -380px; width: 360px; max-width: 90vw; height: 100vh; background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,.1); z-index: 80; transition: right .3s; display: flex; flex-direction: column; }
 .cart-sidebar.open { right: 0; }
 .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 70; display: none; }
@@ -88,18 +87,27 @@ img { max-width: 100%; display: block; }
 .footer-social { display: flex; gap: 16px; }
 .footer-social a { font-size: 18px; color: #888; transition: color .2s; }
 .footer-social a:hover { color: #b83280; }
+.img-placeholder-label { position: absolute; bottom: 50%; left: 50%; transform: translate(-50%,50%); color: #b83280; font-size: 12px; font-weight: 700; text-align: center; background: rgba(255,255,255,.9); padding: 4px 10px; border-radius: 12px; pointer-events: none; z-index: 1; }
+
+/* Modal do Pix Automático */
+.pix-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; }
+.pix-modal.active { display: flex; }
+.pix-box { background: #fff; padding: 30px; border-radius: 16px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; }
+.pix-box h3 { color: #b83280; margin-bottom: 15px; font-size: 20px; }
+.pix-qr { width: 200px; height: 200px; margin: 0 auto 15px; border: 4px solid #f5f5f5; border-radius: 10px; }
+.pix-timer { font-size: 14px; color: #666; margin-bottom: 15px; }
+.pix-status { font-weight: bold; color: #e53e3e; margin-bottom: 15px; }
+.pix-status.paid { color: #38a169; }
+.shipping-calc { background: #f9f9f9; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 13px; text-align: left; }
+.shipping-calc input { width: 100%; padding: 8px; margin-top: 6px; border: 1px solid #ddd; border-radius: 6px; }
 </style>
 </head>
 <body>
-
-<div class="top-announcement">Frete grátis nas compras acima de R$ 150 | Prazo de entrega: 3 a 7 dias úteis</div>
+<div class="top-announcement">Frete grátis nas compras acima de R$ 150 | Entregamos em toda a região</div>
 <header class="site-header">
   <div class="header-container">
     <div class="logo"><h1>Espaço Cris</h1><span>Calçados Multimarca</span></div>
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Buscar sandálias..." oninput="filtrarProdutos()">
-      <button><i class="fa-solid fa-magnifying-glass"></i></button>
-    </div>
+    <div class="search-box"><input type="text" id="searchInput" placeholder="Buscar sandálias..." oninput="filtrarProdutos()"><button><i class="fa-solid fa-magnifying-glass"></i></button></div>
     <div class="header-actions">
       <div class="cart-btn-top" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i><span id="cartCount">0</span></div>
     </div>
@@ -111,64 +119,66 @@ img { max-width: 100%; display: block; }
     <a href="#" onclick="filtrarPorCategoria('todos',event)">Ver Todos</a>
   </nav>
 </header>
-
 <main class="main-content">
   <div class="section-header-row">
     <h2 class="title-section" id="sectionTitle">Lançamentos em Destaque</h2>
   </div>
   <div class="products-grid" id="productsGrid"></div>
 </main>
-
-<!-- Modal Pix / Checkout Automático -->
-<div class="popup-overlay" id="modalPix">
-  <div class="popup-box">
-    <span class="popup-close" onclick="fecharModalPix()">&times;</span>
-    <h3>Pagamento Automático Pix</h3>
-    <p>Escaneie o QR Code abaixo ou copie a chave Pix. O comprovante será gerado automaticamente após a confirmação!</p>
-    
-    <div style="background: #f4f4f4; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
-      <i class="fa-solid fa-qrcode" style="font-size: 90px; color: #b83280; margin-bottom: 10px;"></i>
-      <p style="font-size: 12px; word-break: break-all; background: #fff; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-        00020126580014br.gov.bcb.pix... [CHAVE_PIX_COPIA_E_COLA]
-      </p>
-    </div>
-
-    <button onclick="simularPagamentoAprovado()" style="background: #38a169; margin-bottom: 8px;">Simular Pagamento Aprovado</button>
-    <button onclick="fecharModalPix()" style="background: #888;">Cancelar</button>
+<div class="popup-overlay" id="popup5off">
+  <div class="popup-box" style="position:relative;">
+    <span class="popup-close" onclick="fecharPopup()">&times;</span>
+    <h3>Ganhe 5% OFF</h3>
+    <p>Cadastre seu e-mail e receba um cupom exclusivo para primeira compra!</p>
+    <input type="email" id="emailCupom" placeholder="seu@email.com">
+    <button onclick="aplicarCupom()">Quero meu desconto</button>
   </div>
 </div>
-
-<!-- Modal Comprovante & Código de Envio -->
-<div class="popup-overlay" id="modalComprovante">
-  <div class="popup-box" style="text-align: left;">
-    <span class="popup-close" onclick="fecharComprovante()">&times;</span>
-    <h3 style="text-align: center; color: #38a169;"><i class="fa-solid fa-circle-check"></i> Pagamento Aprovado!</h3>
-    <p style="text-align: center; font-size: 12px; color: #555; margin-bottom: 15px;">O comprovante foi gerado e enviado para o seu WhatsApp com sucesso.</p>
-    
-    <div style="background: #f9f9f9; padding: 12px; border-radius: 8px; font-size: 13px; border: 1px solid #eee; margin-bottom: 15px;">
-      <p><strong>Comprovante Nº:</strong> #PIX-2026-8942</p>
-      <p><strong>Status:</strong> <span style="color: #38a169; font-weight: bold;">Pago com Sucesso</span></p>
-      <p><strong>Previsão de Entrega:</strong> 3 a 5 dias úteis</p>
-      <p><strong>Código de Envio (Rastreio):</strong> <span style="color: #b83280; font-weight: bold;">BR984512365SP</span></p>
-    </div>
-
-    <button onclick="fecharComprovante()">Concluir / Fechar</button>
-  </div>
-</div>
-
 <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 <aside class="cart-sidebar" id="cartSidebar">
   <div class="cart-header"><h3>Sua Sacola</h3><button class="cart-close" onclick="toggleCart()"><i class="fa-solid fa-xmark"></i></button></div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-footer">
     <div class="cart-total"><span>Total</span><span id="cartTotal">R$ 0,00</span></div>
-    <button class="checkout-btn" onclick="finalizarPedidoWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Finalizar pelo WhatsApp</button>
-    <button class="checkout-pix-btn" onclick="abrirModalPix()"><i class="fa-solid fa-qrcode"></i> Pagar com Pix Automático</button>
+    <button class="checkout-btn" onclick="finalizarPedido()"><i class="fa-brands fa-whatsapp"></i> Finalizar pelo WhatsApp</button>
+    <button class="checkout-pix-btn" onclick="iniciarPixAutomatico()"><i class="fa-solid fa-qrcode"></i> Pagar com Pix Automático</button>
   </div>
 </aside>
 
-<a href="https://wa.me/5527997787772?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20calçados!" class="float-whatsapp" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+<!-- Modal Pix Automático com Comprovante e Frete -->
+<div class="pix-modal" id="pixModal">
+  <div class="pix-box">
+    <span class="popup-close" onclick="fecharPixModal()">&times;</span>
+    <h3>Pagamento Pix Automático</h3>
+    <p style="font-size: 13px; color: #555; margin-bottom: 10px;">Escaneie o QR Code abaixo para pagar. O sistema gerará o comprovante e o código de rastreio de envio automaticamente assim que o pagamento for confirmado!</p>
+    <div class="pix-qr" id="pixQrContainer">
+      <!-- QR Code simulado em SVG / Imagem -->
+      <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+        <rect width="100" height="100" fill="#fff"/>
+        <path d="M10 10h30v30H10zM60 10h30v30H60zM10 60h30v30H10z" fill="#b83280"/>
+        <rect x="20" y="20" width="10" height="10" fill="#fff"/>
+        <rect x="70" y="20" width="10" height="10" fill="#fff"/>
+        <rect x="20" y="70" width="10" height="10" fill="#fff"/>
+        <rect x="45" y="45" width="10" height="10" fill="#2d2d2d"/>
+        <rect x="55" y="55" width="15" height="15" fill="#2d2d2d"/>
+        <rect x="15" y="45" width="15" height="10" fill="#2d2d2d"/>
+        <rect x="45" y="15" width="10" height="15" fill="#2d2d2d"/>
+        <rect x="75" y="65" width="15" height="20" fill="#2d2d2d"/>
+      </svg>
+    </div>
+    <div class="pix-timer" id="pixTimer">Aguardando pagamento... (Simulação automática em 5s)</div>
+    <div class="pix-status" id="pixStatus">Status: Aguardando QR Code / Pagamento</div>
+    
+    <div class="shipping-calc">
+      <strong>Prazo de Entrega Estimado:</strong> <span id="prazoEntrega">3 a 5 dias úteis</span><br>
+      <strong>Código de Envio / Rastreio:</strong> <span id="codigoRastreio" style="color: #b83280; font-weight: bold;">Gerado após confirmação</span>
+    </div>
+    
+    <button onclick="simularConfirmacaoPix()" style="margin-top: 15px; background: #38a169;">Simular Pagamento Instantâneo</button>
+  </div>
+</div>
 
+<a href="https://wa.me/5527997787772?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20calçados!" class="float-whatsapp" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-payments">
@@ -186,109 +196,70 @@ img { max-width: 100%; display: block; }
     </div>
   </div>
 </footer>
-
 <script>
-// Dados dos produtos mantidos da sua base
-const produtos = [{"id": 1, "nome": "Sandália Rasteira Confort", "preco": 39.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"]}]; // Simplificado para exemplo funcional
+const produtos = [{"id": 1, "nome": "Sandália Rasteira Confort", "preco": 39.9, "categoria": "lancamento", "promocao": false, "imagens": ["data:image/jpeg;base64,..."]}] // mantido array simplificado para exemplo do script JS integrado
 
 let carrinho = [];
-
-function renderizarProdutos(lista) {
-  const grid = document.getElementById('productsGrid');
-  grid.innerHTML = lista.map(p => `
-    <div class="product-card">
-      <span class="tag-lancamento">Novo</span>
-      <div class="product-image-container">
-        <img src="${p.imagens[0]}" class="active" alt="${p.nome}">
-      </div>
-      <div class="product-info">
-        <div class="product-title">${p.nome}</div>
-        <div class="product-price">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
-        <div class="product-installment">ou em até 3x sem juros</div>
-        <button class="add-to-cart-btn" onclick="adicionarAoCarrinho(${p.id})">Adicionar à Sacola</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function adicionarAoCarrinho(id) {
-  const prod = produtos.find(p => p.id === id);
-  carrinho.push(prod);
-  atualizarCarrinho();
-  toggleCart();
-}
-
-function atualizarCarrinho() {
-  document.getElementById('cartCount').innerText = carrinho.length;
-  const itemsContainer = document.getElementById('cartItems');
-  
-  let total = 0;
-  itemsContainer.innerHTML = carrinho.map((item, index) => {
-    total += item.preco;
-    return `
-      <div class="cart-item">
-        <img src="${item.imagens[0]}" alt="">
-        <div class="cart-item-info">
-          <h4>${item.nome}</h4>
-          <div class="cart-price">R$ ${item.preco.toFixed(2).replace('.', ',')}</div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
-}
 
 function toggleCart() {
   document.getElementById('cartSidebar').classList.toggle('open');
   document.getElementById('cartOverlay').classList.toggle('active');
 }
 
-function filtrarProdutos() {
-  const busca = document.getElementById('searchInput').value.toLowerCase();
-  const filtrados = produtos.filter(p => p.nome.toLowerCase().includes(busca));
-  renderizarProdutos(filtrados);
-}
-
-function filtrarPorCategoria(cat, e) {
-  e.preventDefault();
-  renderizarProdutos(produtos);
-}
-
-function finalizarPedidoWhatsapp() {
-  let texto = "Olá, gostaria de finalizar meu pedido:%0A";
-  carrinho.forEach(item => { text += `- ${item.nome} (R$ ${item.preco.toFixed(2)})%0A`; });
-  window.open(`https://wa.me/5527997787772?text=${texto}`, '_blank');
-}
-
-// Funções de Automação Pix
-function abrirModalPix() {
-  if(carrinho.length === 0) {
-    alert('Sua sacola está vazia!');
+function iniciarPixAutomatico() {
+  if (carrinho.length === 0) {
+    alert("Sua sacola está vazia!");
     return;
   }
   toggleCart();
-  document.getElementById('modalPix').classList.add('active');
+  document.getElementById('pixModal').classList.add('active');
+  document.getElementById('pixStatus').innerText = "Status: Aguardando Pagamento Pix";
+  document.getElementById('pixStatus').className = "pix-status";
+  document.getElementById('codigoRastreio').innerText = "Aguardando confirmação...";
+  
+  // Simulação de confirmação automática após 5 segundos para testar o fluxo completo
+  setTimeout(() => {
+    if (document.getElementById('pixModal').classList.contains('active')) {
+      simularConfirmacaoPix();
+    }
+  }, 6000);
 }
 
-function fecharModalPix() {
-  document.getElementById('modalPix').classList.remove('active');
+function fecharPixModal() {
+  document.getElementById('pixModal').classList.remove('active');
 }
 
-function simularPagamentoAprovado() {
-  fecharModalPix();
-  // Simula o disparo automático do comprovante e código de envio
-  document.getElementById('modalComprovante').classList.add('active');
+function simularConfirmacaoPix() {
+  const statusEl = document.getElementById('pixStatus');
+  statusEl.innerText = "Status: Pagamento Aprovado com Sucesso! Comprovante gerado.";
+  statusEl.className = "pix-status paid";
+  
+  // Gerar código de envio / rastreio aleatório
+  const codigoAleatorio = "BR" + Math.floor(100000000 + Math.random() * 900000000) + "SP";
+  document.getElementById('codigoRastreio').innerText = codigoAleatorio;
+  document.getElementById('prazoEntrega').innerText = "3 a 5 dias úteis para chegar na sua residência.";
+  
+  alert("✅ Pagamento via Pix confirmado!
+
+📄 O comprovante foi emitido para o cliente.
+📦 Código de envio gerado: " + codigoAleatorio + "
+⏱️ Prazo de entrega: 3 a 5 dias.");
 }
 
-function fecharComprovante() {
-  document.getElementById('modalComprovante').classList.remove('active');
-  carrinho = [];
-  atualizarCarrinho();
+function finalizarPedido() {
+  if (carrinho.length === 0) {
+    alert("Sua sacola está vazia!");
+    return;
+  }
+  let texto = "Olá! Gostaria de finalizar o meu pedido:%0A";
+  let total = 0;
+  carrinho.forEach(item => {
+    texto += `- ${item.nome} (${item.qtd}x) - R$ ${(item.preco * item.qtd).toFixed(2)}%0A`;
+    total += item.preco * item.qtd;
+  });
+  texto += `%0ATotal: R$ ${total.toFixed(2)}`;
+  window.open(`https://wa.me/5527997787772?text=${texto}`, '_blank');
 }
-
-// Inicializar carregamento dos produtos
-renderizarProdutos(produtos);
 </script>
 </body>
 </html>
