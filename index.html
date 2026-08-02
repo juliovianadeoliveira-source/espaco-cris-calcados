@@ -1,199 +1,196 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espaço Cris Calçados Multimarca</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espaço Cris Calçados Multimarca</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #faf9f7; color: #2d2d2d; line-height: 1.5; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: inherit; }
+img { max-width: 100%; display: block; }
+.top-announcement { background: #b83280; color: #fff; text-align: center; font-size: 12px; padding: 8px 16px; letter-spacing: 0.5px; }
+.site-header { background: #fff; border-bottom: 1px solid #e8e4e0; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 8px rgba(0,0,0,.05); }
+.header-container { max-width: 1280px; margin: auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.logo h1 { font-size: 26px; font-weight: 800; color: #b83280; letter-spacing: -1px; }
+.logo span { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 2px; display: block; margin-top: -4px; }
+.search-box { flex: 1; max-width: 420px; display: flex; border: 1px solid #ddd; border-radius: 30px; overflow: hidden; background: #f5f5f5; }
+.search-box input { flex: 1; border: none; background: none; padding: 10px 18px; font-size: 14px; outline: none; }
+.search-box button { border: none; background: #b83280; color: #fff; padding: 0 18px; font-size: 16px; }
+.header-actions { display: flex; align-items: center; gap: 14px; }
+.cart-btn-top { position: relative; cursor: pointer; font-size: 22px; color: #444; transition: color .2s; }
+.cart-btn-top:hover { color: #b83280; }
+.cart-btn-top span { position: absolute; top: -8px; right: -10px; background: #b83280; color: #fff; font-size: 10px; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; }
+.nav-menu { max-width: 1280px; margin: auto; padding: 0 24px; display: flex; gap: 32px; border-top: 1px solid #f0ece8; }
+.nav-menu a { padding: 14px 0; font-size: 13px; font-weight: 700; color: #444; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid transparent; transition: .2s; }
+.nav-menu a:hover, .nav-menu a.active { color: #b83280; border-bottom-color: #b83280; }
+.main-content { max-width: 1280px; margin: auto; padding: 32px 24px 60px; }
+.section-header-row { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
+.title-section { font-size: 22px; font-weight: 700; color: #2d2d2d; text-transform: uppercase; letter-spacing: 1px; }
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+.product-card { background: #fff; border: 1px solid #ece8e4; border-radius: 14px; overflow: hidden; transition: transform .25s, box-shadow .25s; }
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(0,0,0,.08); }
+.product-image-container { position: relative; width: 100%; height: 300px; overflow: hidden; background: #f9f9f9; }
+.product-image-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
+.product-image-container img.active { display: block; }
+.card-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.85); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #333; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,.15); transition: background .2s; z-index: 2; }
+.card-arrow:hover { background: #fff; color: #b83280; }
+.card-arrow.prev { left: 10px; }
+.card-arrow.next { right: 10px; }
+.card-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
+.card-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,.3); cursor: pointer; transition: background .2s; }
+.card-dot.active { background: #b83280; }
+.product-info { padding: 16px; }
+.product-title { font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px; line-height: 1.3; min-height: 38px; }
+.product-price { font-size: 20px; font-weight: 800; color: #b83280; margin-bottom: 2px; }
+.product-price .old-price { font-size: 13px; color: #999; text-decoration: line-through; font-weight: 400; margin-left: 6px; }
+.product-installment { font-size: 11px; color: #666; margin-bottom: 12px; }
+.quantity-control { display: flex; align-items: center; gap: 0; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin-bottom: 12px; width: max-content; }
+.quantity-control button { background: #f5f5f5; border: none; width: 32px; height: 32px; font-size: 16px; color: #444; }
+.quantity-control button:hover { background: #ece8e4; }
+.quantity-control span { padding: 0 14px; font-size: 14px; font-weight: 600; color: #333; min-width: 36px; text-align: center; }
+.add-to-cart-btn { width: 100%; padding: 12px; background: #b83280; color: #fff; border: none; border-radius: 10px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: background .2s, transform .15s; }
+.add-to-cart-btn:hover { background: #9c2a6d; transform: scale(1.02); }
+.tag-promo { position: absolute; top: 10px; left: 10px; background: #e60000; color: #fff; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 20px; z-index: 3; text-transform: uppercase; letter-spacing: 1px; }
+.tag-lancamento { position: absolute; top: 10px; left: 10px; background: #32df7a; color: #fff; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 20px; z-index: 3; text-transform: uppercase; letter-spacing: 1px; }
+.newsletter-section { background: #f3ede7; padding: 48px 24px; }
+.newsletter-container { max-width: 680px; margin: auto; text-align: center; }
+.newsletter-container h3 { font-size: 18px; font-weight: 700; margin-bottom: 18px; color: #3a3a3a; text-transform: uppercase; letter-spacing: 2px; }
+.newsletter-container h3 i { margin-right: 8px; color: #b83280; }
+.newsletter-form { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+.newsletter-form input { padding: 12px 16px; border: 1px solid #d4cec8; border-radius: 8px; font-size: 14px; min-width: 220px; outline: none; }
+.newsletter-btn { padding: 12px 28px; background: #b83280; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: background .2s; }
+.newsletter-btn:hover { background: #9c2a6d; }
+.newsletter-leg { font-size: 11px; color: #888; line-height: 1.5; }
+.newsletter-leg a { color: #b83280; text-decoration: underline; }
+.cart-modal { position: fixed; top: 0; right: 0; width: 360px; max-width: 100%; height: 100vh; background: #fff; z-index: 100; transform: translateX(100%); transition: transform .3s cubic-bezier(.16,1,.3,1); box-shadow: -4px 0 24px rgba(0,0,0,.12); display: flex; flex-direction: column; }
+.cart-modal.open { transform: translateX(0); }
+.cart-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee; }
+.cart-header h3 { font-size: 16px; font-weight: 700; text-transform: uppercase; }
+.cart-header button { background: none; border: none; font-size: 22px; color: #888; cursor: pointer; }
+.cart-items { flex: 1; overflow-y: auto; padding: 20px; }
+.empty-cart { text-align: center; color: #999; font-size: 14px; margin-top: 40px; }
+.cart-footer { padding: 20px; border-top: 1px solid #eee; }
+.cart-total-row { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 14px; font-weight: 700; }
+.cart-total-row strong { font-size: 18px; color: #b83280; }
+.whatsapp-checkout-btn { width: 100%; padding: 14px; background: #25d366; color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background .2s, transform .15s; }
+.whatsapp-checkout-btn:hover { background: #1ebe5d; transform: scale(1.02); }
+.popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.popup-box { background: #fff; border-radius: 18px; overflow: hidden; display: flex; max-width: 720px; width: 100%; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+.popup-left { width: 45%; background: linear-gradient(135deg, #b83280, #e08bb0); min-height: 320px; display: flex; align-items: center; justify-content: center; }
+.popup-left::after { content: '\2728'; font-size: 80px; opacity: .2; }
+.popup-right { width: 55%; padding: 36px 32px; display: flex; flex-direction: column; justify-content: center; }
+.popup-right h3 { font-size: 13px; font-weight: 700; color: #b83280; letter-spacing: 2px; margin-bottom: 6px; }
+.popup-right span { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
+.popup-right h2 { font-size: 42px; font-weight: 900; color: #b83280; margin-bottom: 6px; line-height: 1; }
+.popup-right p { font-size: 12px; color: #666; margin-bottom: 18px; line-height: 1.5; }
+.popup-right input { padding: 12px 14px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; font-size: 14px; outline: none; }
+.popup-right input:focus { border-color: #b83280; }
+.popup-right button { padding: 12px; background: #b83280; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: background .2s; }
+.popup-right button:hover { background: #9c2a6d; }
+.popup-close { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 22px; color: #fff; cursor: pointer; z-index: 10; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: rgba(0,0,0,.2); }
+.float-whatsapp { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: #25d366; color: #fff; border-radius: 50%; display: grid; place-items: center; font-size: 28px; z-index: 90; box-shadow: 0 4px 16px rgba(37,211,102,.4); transition: transform .2s, box-shadow .2s; }
+.float-whatsapp:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(37,211,102,.5); }
+.site-footer { background: #2b2b2b; color: #ccc; padding: 32px 24px; }
+.footer-inner { max-width: 1280px; margin: auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+.footer-payments { display: flex; gap: 10px; align-items: center; }
+.footer-payments img { height: 28px; filter: grayscale(1) brightness(1.5); opacity: .8; }
+.footer-social { display: flex; gap: 14px; }
+.footer-social a { width: 36px; height: 36px; border: 1px solid #555; border-radius: 50%; display: grid; place-items: center; color: #ccc; font-size: 14px; transition: .2s; }
+.footer-social a:hover { border-color: #b83280; color: #b83280; }
+@media (max-width: 768px) {
+.header-container { flex-wrap: wrap; gap: 12px; }
+.search-box { order: 3; max-width: 100%; flex-basis: 100%; }
+.products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.product-image-container { height: 220px; }
+.popup-box { flex-direction: column; }
+.popup-left { width: 100%; height: 160px; }
+.popup-right { width: 100%; padding: 24px; }
+.nav-menu { gap: 18px; overflow-x: auto; }
+.nav-menu a { font-size: 12px; white-space: nowrap; }
+.cart-modal { width: 100%; }
+.footer-inner { flex-direction: column; text-align: center; }
+}
+</style>
 </head>
 <body>
-
-    <!-- Pop-up de Desconto Inicial -->
-    <div class="popup-overlay" id="popupOverlay">
-        <div class="popup-box">
-            <button class="popup-close" onclick="closePopup()"><i class="fa-solid fa-xmark"></i></button>
-            <div class="popup-left"></div>
-            <div class="popup-right">
-                <h3>VOCÊ + ESPAÇO CRIS</h3>
-                <span>CADASTRE-SE E RECEBA</span>
-                <h2>5% OFF</h2>
-                <p>PARA ESCOLHER SEU NOVO CALÇADO FAVORITO.</p>
-                <input type="text" placeholder="Nome:">
-                <input type="email" placeholder="E-mail:">
-                <button onclick="closePopup()">ENVIAR</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Topo -->
-    <div class="top-announcement">
-        3% de desconto no PIX • Frete grátis (consulte condições) • 10x sem juros no cartão de crédito
-    </div>
-
-    <header class="site-header">
-        <div class="header-container">
-            <div class="logo">
-                <h1>Espaço Cris</h1>
-                <span>Calçados Multimarca</span>
-            </div>
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="O que você está procurando?" oninput="filtrarProdutos()">
-                <button><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
-            <div class="header-actions">
-                <div class="cart-btn-top" onclick="toggleCart()">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <span id="cartCount">0</span>
-                </div>
-            </div>
-        </div>
-        <nav class="nav-menu">
-            <a href="#" class="active" onclick="filtrarPorCategoria('lancamento', event)">LANÇAMENTO</a>
-            <a href="#" onclick="filtrarPorCategoria('sandalia', event)">SANDÁLIA</a>
-            <a href="#" style="color: #b83280;" onclick="filtrarPorCategoria('promocao', event)">PROMOÇÃO</a>
-        </nav>
-    </header>
-
-    <!-- Conteúdo Principal -->
-    <main class="main-content">
-        <div class="section-header-row">
-            <h3 class="title-section" id="sectionTitle">Lançamentos em Destaque</h3>
-        </div>
-        <div class="products-grid" id="productsGrid"></div>
-    </main>
-
-    <!-- Newsletter -->
-    <section class="newsletter-section">
-        <div class="newsletter-container">
-            <h3><i class="fa-solid fa-envelope-open-text"></i> FIQUE POR DENTRO</h3>
-            <div class="newsletter-form">
-                <input type="text" placeholder="Digite seu nome...">
-                <input type="email" placeholder="Insira seu e-mail e receba as novidades..">
-                <button type="button" class="newsletter-btn">ASSINAR</button>
-            </div>
-            <p class="newsletter-leg">Ao clicar em ASSINAR declaro que concordo em receber novidades e promoções do Espaço Cris. Confira nossa <a href="#">Política de privacidade</a>.</p>
-        </div>
-    </section>
-
-    <!-- Carrinho Lateral -->
-    <div class="cart-modal" id="cartModal">
-        <div class="cart-header">
-            <h3>Seu Carrinho</h3>
-            <button onclick="toggleCart()"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="cart-items" id="cartItems">
-            <p class="empty-cart">Seu carrinho está vazio.</p>
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total-row">
-                <span>Total:</span>
-                <strong id="cartTotal">R$ 0,00</strong>
-            </div>
-            <button class="whatsapp-checkout-btn" onclick="checkoutWhatsApp()">
-                <i class="fa-brands fa-whatsapp"></i> Finalizar Pedido no WhatsApp
-            </button>
-        </div>
-    </div>
-
-    <!-- WhatsApp Flutuante -->
-    <a href="https://wa.me/5527997787772?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20calçados!" class="float-whatsapp" target="_blank" title="Fale pelo WhatsApp">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
-
-    <!-- Rodapé -->
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-payments">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Diners_Club_Logo.svg" alt="Diners Club">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Elo_logo_%282019%29.svg" alt="Elo">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Pix_logo.svg" alt="Pix">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo_%282006%29.svg" alt="Visa">
-                <img src="https://img.icons8.com/color/48/exchange.png" alt="Vale Troca">
-            </div>
-            <div class="footer-social">
-                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-youtube"></i></a>
-                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-const produtos = [
-  {id:1,nome:"Sandália Rasteira Listrada Azul",preco:79.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_1.jpg"]},
-  {id:2,nome:"Slide Borboletas Branco",preco:59.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_2.jpg"]},
-  {id:3,nome:"Rasteira Cortiça Natural",preco:69.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_3.jpg"]},
-  {id:4,nome:"Slide Branco Strass H",preco:89.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_4.jpg"]},
-  {id:5,nome:"Slide Preto Dourado",preco:79.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_5.jpg"]},
-  {id:6,nome:"Sandália Rasteira Verniz",preco:99.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_6.jpg"]},
-  {id:7,nome:"Rasteira Bordada Floral",preco:89.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_7.jpg"]},
-  {id:8,nome:"Slide Comfort Rosa",preco:59.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_8.jpg"]},
-  {id:9,nome:"Sandália Salto Baixo Nude",preco:119.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_9.jpg"]},
-  {id:10,nome:"Rasteira Trançada Preta",preco:69.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_10.jpg"]},
-  {id:11,nome:"Slide Metalizado Dourado",preco:79.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_11.jpg"]},
-  {id:12,nome:"Sandália Tira Elástica",preco:89.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_12.jpg"]},
-  {id:13,nome:"Slide Pelúcia Marrom",preco:99.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_13.jpg"]},
-  {id:14,nome:"Rasteira Animal Print",preco:79.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_14.jpg"]},
-  {id:15,nome:"Sandália Salto Bloco Rosa",preco:139.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_15.jpg"]},
-  {id:16,nome:"Slide Glitter Prata",preco:69.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_16.jpg"]},
-  {id:17,nome:"Sandália Plataforma Jeans",preco:109.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_17.jpg"]},
-  {id:18,nome:"Rasteira Cordão Trançado",preco:59.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_18.jpg"]},
-  {id:19,nome:"Slide Palmilha Soft",preco:89.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_19.jpg"]},
-  {id:20,nome:"Sandália Salto Fino Vinho",preco:149.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_20.jpg"]},
-  {id:21,nome:"Rasteira Macramê Bege",preco:79.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_21.jpg"]},
-  {id:22,nome:"Slide Maxi Branco",preco:99.90,categoria:"lancamento",promocao:false,imagens:["foto_sandalia_22.jpg"]},
-  {id:23,nome:"Sandália Rasteira Nude",preco:89.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_23.jpg"]},
-  {id:24,nome:"Slide Colorido Verão",preco:59.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_24.jpg"]},
-  {id:25,nome:"Sandália Salto Médio Preto",preco:129.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_25.jpg"]},
-  {id:26,nome:"Rasteira Pedraria Cobre",preco:99.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_26.jpg"]},
-  {id:27,nome:"Slide Tira Dupla",preco:69.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_27.jpg"]},
-  {id:28,nome:"Sandália Anabela Azul",preco:119.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_28.jpg"]},
-  {id:29,nome:"Rasteira Tira Cruzada",preco:79.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_29.jpg"]},
-  {id:30,nome:"Slide Tecido Reciclado",preco:89.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_30.jpg"]},
-  {id:31,nome:"Sandália Salto Grosso Marrom",preco:139.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_31.jpg"]},
-  {id:32,nome:"Slide Listras Navy",preco:59.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_32.jpg"]},
-  {id:33,nome:"Rasteira Franja Boho",preco:89.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_33.jpg"]},
-  {id:34,nome:"Sandália Plataforma Preta",preco:109.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_34.jpg"]},
-  {id:35,nome:"Slide Cristais Transparente",preco:79.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_35.jpg"]},
-  {id:36,nome:"Rasteira Linho Natural",preco:69.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_36.jpg"]},
-  {id:37,nome:"Sandália Salto Carrapicho",preco:149.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_37.jpg"]},
-  {id:38,nome:"Slide Palmilha Massageadora",preco:99.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_38.jpg"]},
-  {id:39,nome:"Rasteira Amarração Tornozeleira",preco:89.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_39.jpg"]},
-  {id:40,nome:"Sandália Salto Fino Nude",preco:159.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_40.jpg"]},
-  {id:41,nome:"Slide Veludo Rosa",preco:79.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_41.jpg"]},
-  {id:42,nome:"Rasteira Ponteira Dourada",preco:99.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_42.jpg"]},
-  {id:43,nome:"Sandália Salto Médio Vermelho",preco:119.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_43.jpg"]},
-  {id:44,nome:"Slide Maxi Preto",preco:69.90,categoria:"sandalia",promocao:false,imagens:["foto_sandalia_44.jpg"]},
-  {id:45,nome:"Sandália Rasteira Verde Lima",preco:49.90,categoria:"promocao",promocao:true,precoAntigo:79.90,imagens:["foto_sandalia_45.jpg"]},
-  {id:46,nome:"Slide Básico Branco",preco:39.90,categoria:"promocao",promocao:true,precoAntigo:59.90,imagens:["foto_sandalia_46.jpg"]},
-  {id:47,nome:"Sandália Salto Baixo Lilás",preco:69.90,categoria:"promocao",promocao:true,precoAntigo:109.90,imagens:["foto_sandalia_47.jpg"]},
-  {id:48,nome:"Rasteira Strass Preta",preco:59.90,categoria:"promocao",promocao:true,precoAntigo:99.90,imagens:["foto_sandalia_48.jpg"]},
-  {id:49,nome:"Slide Neon Pink",preco:49.90,categoria:"promocao",promocao:true,precoAntigo:79.90,imagens:["foto_sandalia_49.jpg"]},
-  {id:50,nome:"Sandália Salto Anabela Off White",preco:89.90,categoria:"promocao",promocao:true,precoAntigo:139.90,imagens:["foto_sandalia_50.jpg"]},
-  {id:51,nome:"Rasteira Crochê Azul",preco:49.90,categoria:"promocao",promocao:true,precoAntigo:89.90,imagens:["foto_sandalia_51.jpg"]},
-  {id:52,nome:"Slide Fivela Dourada",preco:59.90,categoria:"promocao",promocao:true,precoAntigo:99.90,imagens:["foto_sandalia_52.jpg"]},
-  {id:53,nome:"Sandália Salto Médio Caramelo",preco:79.90,categoria:"promocao",promocao:true,precoAntigo:129.90,imagens:["foto_sandalia_53.jpg"]},
-  {id:54,nome:"Rasteira Metalizada Prata",preco:49.90,categoria:"promocao",promocao:true,precoAntigo:79.90,imagens:["foto_sandalia_54.jpg"]},
-  {id:55,nome:"Slide Comfort Plus Preto",preco:59.90,categoria:"promocao",promocao:true,precoAntigo:99.90,imagens:["foto_sandalia_55.jpg"]},
-  {id:56,nome:"Sandália Salto Fino Preto",preco:89.90,categoria:"promocao",promocao:true,precoAntigo:149.90,imagens:["foto_sandalia_56.jpg"]},
-  {id:57,nome:"Rasteira Tira Branca",preco:39.90,categoria:"promocao",promocao:true,precoAntigo:69.90,imagens:["foto_sandalia_57.jpg"]},
-  {id:58,nome:"Slide Tropical Amarelo",preco:49.90,categoria:"promocao",promocao:true,precoAntigo:79.90,imagens:["foto_sandalia_58.jpg"]},
-  {id:59,nome:"Sandália Anabela Jeans",preco:79.90,categoria:"promocao",promocao:true,precoAntigo:129.90,imagens:["foto_sandalia_59.jpg"]},
-  {id:60,nome:"Rasteira Pedraria Azul",preco:59.90,categoria:"promocao",promocao:true,precoAntigo:99.90,imagens:["foto_sandalia_60.jpg"]},
-  {id:61,nome:"Slide Tira Transparente",preco:49.90,categoria:"promocao",promocao:true,precoAntigo:79.90,imagens:["foto_sandalia_61.jpg"]},
-  {id:62,nome:"Sandália Salto Bloco Verde",preco:79.90,categoria:"promocao",promocao:true,precoAntigo:119.90,imagens:["foto_sandalia_62.jpg"]},
-  {id:63,nome:"Rasteira Corda Natural",preco:49.90,categoria:"promocao",promocao:true,precoAntigo:69.90,imagens:["foto_sandalia_63.jpg"]},
-  {id:64,nome:"Slide Maxi Branco",preco:59.90,categoria:"promocao",promocao:true,precoAntigo:99.90,imagens:["foto_sandalia_64.jpg"]},
-  {id:65,nome:"Sandália Salto Fino Rose",preco:89.90,categoria:"promocao",promocao:true,precoAntigo:159.90,imagens:["foto_sandalia_65.jpg"]},
-  {id:66,nome:"Rasteira Amarrada Dourada",preco:59.90,categoria:"promocao",promocao:true,precoAntigo:99.90,imagens:["foto_sandalia_66.jpg"]}
-];
-
+<div class="popup-overlay" id="popupOverlay">
+<div class="popup-box">
+<button class="popup-close" onclick="closePopup()"><i class="fa-solid fa-xmark"></i></button>
+<div class="popup-left"></div>
+<div class="popup-right">
+<h3>VOCÊ + ESPAÇO CRIS</h3>
+<span>CADASTRE-SE E RECEBA</span>
+<h2>5% OFF</h2>
+<p>PARA ESCOLHER SEU NOVO CALÇADO FAVORITO.</p>
+<input type="text" placeholder="Nome:">
+<input type="email" placeholder="E-mail:">
+<button onclick="closePopup()">ENVIAR</button>
+</div>
+</div>
+</div>
+<div class="top-announcement">3% de desconto no PIX • Frete grátis (consulte condições) • 10x sem juros no cartão de crédito</div>
+<header class="site-header">
+<div class="header-container">
+<div class="logo"><h1>Espaço Cris</h1><span>Calçados Multimarca</span></div>
+<div class="search-box"><input type="text" id="searchInput" placeholder="O que você está procurando?" oninput="filtrarProdutos()"><button><i class="fa-solid fa-magnifying-glass"></i></button></div>
+<div class="header-actions">
+<div class="cart-btn-top" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i><span id="cartCount">0</span></div>
+</div>
+</div>
+<nav class="nav-menu">
+<a href="#" class="active" onclick="filtrarPorCategoria('lancamento',event)">LANÇAMENTO</a>
+<a href="#" onclick="filtrarPorCategoria('sandalia',event)">SANDÁLIA</a>
+<a href="#" style="color:#b83280;" onclick="filtrarPorCategoria('promocao',event)">PROMOÇÃO</a>
+</nav>
+</header>
+<main class="main-content">
+<div class="section-header-row"><h3 class="title-section" id="sectionTitle">Lançamentos em Destaque</h3></div>
+<div class="products-grid" id="productsGrid"></div>
+</main>
+<section class="newsletter-section">
+<div class="newsletter-container">
+<h3><i class="fa-solid fa-envelope-open-text"></i> FIQUE POR DENTRO</h3>
+<div class="newsletter-form">
+<input type="text" placeholder="Digite seu nome...">
+<input type="email" placeholder="Insira seu e-mail e receba as novidades..">
+<button type="button" class="newsletter-btn">ASSINAR</button>
+</div>
+<p class="newsletter-leg">Ao clicar em ASSINAR declaro que concordo em receber novidades e promoções do Espaço Cris. Confira nossa <a href="#">Política de privacidade</a>.</p>
+</div>
+</section>
+<div class="cart-modal" id="cartModal">
+<div class="cart-header"><h3>Seu Carrinho</h3><button onclick="toggleCart()"><i class="fa-solid fa-xmark"></i></button></div>
+<div class="cart-items" id="cartItems"><p class="empty-cart">Seu carrinho está vazio.</p></div>
+<div class="cart-footer">
+<div class="cart-total-row"><span>Total:</span><strong id="cartTotal">R$ 0,00</strong></div>
+<button class="whatsapp-checkout-btn" onclick="checkoutWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Finalizar Pedido no WhatsApp</button>
+</div>
+</div>
+<a href="https://wa.me/5527997787772?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20calçados!" class="float-whatsapp" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+<footer class="site-footer">
+<div class="footer-inner">
+<div class="footer-payments">
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Diners_Club_Logo.svg" alt="Diners">
+<img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Elo_logo_%282019%29.svg" alt="Elo">
+<img src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Pix_logo.svg" alt="Pix">
+<img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard">
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo_%282006%29.svg" alt="Visa">
+</div>
+<div class="footer-social">
+<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+<a href="#"><i class="fa-brands fa-instagram"></i></a>
+<a href="#"><i class="fa-brands fa-youtube"></i></a>
+<a href="#"><i class="fa-brands fa-tiktok"></i></a>
+</div>
+</div>
+</footer>
+<script>
+const produtos = [{"id": 1, "nome": "Sandália Rasteira Listrada Azul", "preco": 79.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.11.jpeg"]}, {"id": 2, "nome": "Slide Borboletas Branco", "preco": 59.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.11%20(3).jpeg"]}, {"id": 3, "nome": "Rasteira Cortiça Natural", "preco": 69.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.11%20(2).jpeg"]}, {"id": 4, "nome": "Slide Branco Strass H", "preco": 89.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.10.jpeg"]}, {"id": 5, "nome": "Slide Preto Dourado", "preco": 79.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.10%20(3).jpeg"]}, {"id": 6, "nome": "Sandália Rasteira Verniz", "preco": 99.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.10%20(2).jpeg"]}, {"id": 7, "nome": "Rasteira Bordada Floral", "preco": 89.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.10%20(1).jpeg"]}, {"id": 8, "nome": "Slide Comfort Rosa", "preco": 59.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.09.jpeg"]}, {"id": 9, "nome": "Sandália Salto Baixo Nude", "preco": 119.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.09%20(3).jpeg"]}, {"id": 10, "nome": "Rasteira Trançada Preta", "preco": 69.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.09%20(2).jpeg"]}, {"id": 11, "nome": "Slide Metalizado Dourado", "preco": 79.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2015.14.09%20(1).jpeg"]}, {"id": 12, "nome": "Sandália Tira Elástica", "preco": 89.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.24.jpeg"]}, {"id": 13, "nome": "Slide Pelúcia Marrom", "preco": 99.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.24%20(1).jpeg"]}, {"id": 14, "nome": "Rasteira Animal Print", "preco": 79.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.23.jpeg"]}, {"id": 15, "nome": "Sandália Salto Bloco Rosa", "preco": 139.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.23%20(3).jpeg"]}, {"id": 16, "nome": "Slide Glitter Prata", "preco": 69.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.23%20(2).jpeg"]}, {"id": 17, "nome": "Sandália Plataforma Jeans", "preco": 109.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.23%20(1).jpeg"]}, {"id": 18, "nome": "Rasteira Cordão Trançado", "preco": 59.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.22.jpeg"]}, {"id": 19, "nome": "Slide Palmilha Soft", "preco": 89.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.22%20(4).jpeg"]}, {"id": 20, "nome": "Sandália Salto Fino Vinho", "preco": 149.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.22%20(2).jpeg"]}, {"id": 21, "nome": "Rasteira Macramê Bege", "preco": 79.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.22%20(1).jpeg"]}, {"id": 22, "nome": "Slide Maxi Branco", "preco": 99.9, "categoria": "lancamento", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.21.jpeg"]}, {"id": 23, "nome": "Sandália Rasteira Nude", "preco": 89.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.21%20(3).jpeg"]}, {"id": 24, "nome": "Slide Colorido Verão", "preco": 59.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.21%20(2).jpeg"]}, {"id": 25, "nome": "Sandália Salto Médio Preto", "preco": 129.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.21%20(1).jpeg"]}, {"id": 26, "nome": "Rasteira Pedraria Cobre", "preco": 99.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.20.jpeg"]}, {"id": 27, "nome": "Slide Tira Dupla", "preco": 69.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.20%20(3).jpeg"]}, {"id": 28, "nome": "Sandália Anabela Azul", "preco": 119.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.20%20(2).jpeg"]}, {"id": 29, "nome": "Rasteira Tira Cruzada", "preco": 79.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.20%20(1).jpeg"]}, {"id": 30, "nome": "Slide Tecido Reciclado", "preco": 89.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.19.jpeg"]}, {"id": 31, "nome": "Sandália Salto Grosso Marrom", "preco": 139.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.19%20(3).jpeg"]}, {"id": 32, "nome": "Slide Listras Navy", "preco": 59.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.19%20(2).jpeg"]}, {"id": 33, "nome": "Rasteira Franja Boho", "preco": 89.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.19%20(1).jpeg"]}, {"id": 34, "nome": "Sandália Plataforma Preta", "preco": 109.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.18.jpeg"]}, {"id": 35, "nome": "Slide Cristais Transparente", "preco": 79.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.18%20(3).jpeg"]}, {"id": 36, "nome": "Rasteira Linho Natural", "preco": 69.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.18%20(2).jpeg"]}, {"id": 37, "nome": "Sandália Salto Carrapicho", "preco": 149.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.18%20(1).jpeg"]}, {"id": 38, "nome": "Slide Palmilha Massageadora", "preco": 99.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.17.jpeg"]}, {"id": 39, "nome": "Rasteira Amarração Tornozeleira", "preco": 89.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.17%20(3).jpeg"]}, {"id": 40, "nome": "Sandália Salto Fino Nude", "preco": 159.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.17%20(2).jpeg"]}, {"id": 41, "nome": "Slide Veludo Rosa", "preco": 79.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.17%20(1).jpeg"]}, {"id": 42, "nome": "Rasteira Ponteira Dourada", "preco": 99.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.16.jpeg"]}, {"id": 43, "nome": "Sandália Salto Médio Vermelho", "preco": 119.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.16%20(3).jpeg"]}, {"id": 44, "nome": "Slide Maxi Preto", "preco": 69.9, "categoria": "sandalia", "promocao": false, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.16%20(2).jpeg"]}, {"id": 45, "nome": "Sandália Rasteira Verde Lima", "preco": 49.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.16%20(1).jpeg"], "precoAntigo": 79.9}, {"id": 46, "nome": "Slide Básico Branco", "preco": 39.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.15.jpeg"], "precoAntigo": 59.9}, {"id": 47, "nome": "Sandália Salto Baixo Lilás", "preco": 69.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.15%20(3).jpeg"], "precoAntigo": 109.9}, {"id": 48, "nome": "Rasteira Strass Preta", "preco": 59.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.15%20(2).jpeg"], "precoAntigo": 99.9}, {"id": 49, "nome": "Slide Neon Pink", "preco": 49.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.15%20(1).jpeg"], "precoAntigo": 79.9}, {"id": 50, "nome": "Sandália Salto Anabela Off White", "preco": 89.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.14.jpeg"], "precoAntigo": 139.9}, {"id": 51, "nome": "Rasteira Crochê Azul", "preco": 49.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.14%20(3).jpeg"], "precoAntigo": 89.9}, {"id": 52, "nome": "Slide Fivela Dourada", "preco": 59.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.14%20(2).jpeg"], "precoAntigo": 99.9}, {"id": 53, "nome": "Sandália Salto Médio Caramelo", "preco": 79.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.14%20(1).jpeg"], "precoAntigo": 129.9}, {"id": 54, "nome": "Rasteira Metalizada Prata", "preco": 49.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.13.jpeg"], "precoAntigo": 79.9}, {"id": 55, "nome": "Slide Comfort Plus Preto", "preco": 59.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.13%20(3).jpeg"], "precoAntigo": 99.9}, {"id": 56, "nome": "Sandália Salto Fino Preto", "preco": 89.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.13%20(2).jpeg"], "precoAntigo": 69.9}, {"id": 57, "nome": "Rasteira Tira Branca", "preco": 39.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.13%20(1).jpeg"], "precoAntigo": 99.9}, {"id": 58, "nome": "Slide Tropical Amarelo", "preco": 49.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.12.jpeg"], "precoAntigo": 119.9}, {"id": 59, "nome": "Sandália Anabela Jeans", "preco": 79.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.12%20(3).jpeg"], "precoAntigo": 79.9}, {"id": 60, "nome": "Rasteira Pedraria Azul", "preco": 59.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.12%20(2).jpeg"], "precoAntigo": 69.9}, {"id": 61, "nome": "Slide Tira Transparente", "preco": 49.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.12%20(1).jpeg"], "precoAntigo": 119.9}, {"id": 62, "nome": "Sandália Salto Bloco Verde", "preco": 79.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.11.jpeg"], "precoAntigo": 69.9}, {"id": 63, "nome": "Rasteira Corda Natural", "preco": 49.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.11%20(2).jpeg"], "precoAntigo": 99.9}, {"id": 64, "nome": "Slide Maxi Branco", "preco": 59.9, "categoria": "promocao", "promocao": true, "imagens": ["https://added-green-ujwiq9um.edgeone.dev/WhatsApp%20Image%202026-08-01%20at%2010.09.11%20(1).jpeg"], "precoAntigo": 99.9}];
 let carrinho = [];
 let categoriaAtual = 'lancamento';
-
 function renderizarProdutos(lista) {
   const grid = document.getElementById('productsGrid');
   if (!grid) return;
@@ -207,44 +204,34 @@ function renderizarProdutos(lista) {
     let imgs = '', dots = '';
     p.imagens.forEach((img, idx) => {
       const cls = idx === 0 ? 'active' : '';
-      imgs += `<img src="${img}" alt="${p.nome}" class="${cls}" data-index="${idx}">`;
-      dots += `<div class="card-dot ${cls}" data-index="${idx}"></div>`;
+      imgs += '<img src="' + img + '" alt="' + p.nome + '" class="' + cls + '" data-index="' + idx + '">';
+      dots += '<div class="card-dot ' + cls + '" data-index="' + idx + '"></div>';
     });
     let tag = '';
     if (p.promocao) tag = '<div class="tag-promo">Promoção</div>';
     else if (p.categoria === 'lancamento') tag = '<div class="tag-lancamento">Novo</div>';
-    let precoHtml = `R$ ${p.preco.toFixed(2).replace('.',',')}`;
+    let precoHtml = 'R$ ' + p.preco.toFixed(2).replace('.',',');
     if (p.precoAntigo) {
-      precoHtml = `<span class="old-price">R$ ${p.precoAntigo.toFixed(2).replace('.',',')}</span> R$ ${p.preco.toFixed(2).replace('.',',')}`;
+      precoHtml = '<span class="old-price">R$ ' + p.precoAntigo.toFixed(2).replace('.',',') + '</span> R$ ' + p.preco.toFixed(2).replace('.',',');
     }
     const el = document.createElement('div');
     el.className = 'product-card';
-    el.innerHTML = `
-      <div class="product-image-container" id="img-container-${p.id}">
-        ${tag}
-        <button class="card-arrow prev" onclick="mudarFoto(${p.id},-1)"><i class="fa-solid fa-chevron-left"></i></button>
-        ${imgs}
-        <button class="card-arrow next" onclick="mudarFoto(${p.id},1)"><i class="fa-solid fa-chevron-right"></i></button>
-        <div class="card-dots" id="dots-${p.id}">${dots}</div>
-      </div>
-      <div class="product-info">
-        <h4 class="product-title">${p.nome}</h4>
-        <div class="product-price">${precoHtml}</div>
-        <div class="product-installment">Em até 6x R$ ${parcela} sem juros</div>
-        <div class="quantity-control">
-          <button onclick="mudarQtd(${p.id},-1)">-</button>
-          <span id="qtd-${p.id}">1</span>
-          <button onclick="mudarQtd(${p.id},1)">+</button>
-        </div>
-        <button class="add-to-cart-btn" onclick="adicionarAoCarrinho(${p.id})">ADICIONAR À SACOLA</button>
-      </div>`;
+    el.innerHTML = '<div class="product-image-container" id="img-container-' + p.id + '">' + tag +
+      '<button class="card-arrow prev" onclick="mudarFoto(' + p.id + ',-1)"><i class="fa-solid fa-chevron-left"></i></button>' +
+      imgs +
+      '<button class="card-arrow next" onclick="mudarFoto(' + p.id + ',1)"><i class="fa-solid fa-chevron-right"></i></button>' +
+      '<div class="card-dots" id="dots-' + p.id + '">' + dots + '</div></div>' +
+      '<div class="product-info"><h4 class="product-title">' + p.nome + '</h4>' +
+      '<div class="product-price">' + precoHtml + '</div>' +
+      '<div class="product-installment">Em até 6x R$ ' + parcela + ' sem juros</div>' +
+      '<div class="quantity-control"><button onclick="mudarQtd(' + p.id + ',-1)">-</button><span id="qtd-' + p.id + '">1</span><button onclick="mudarQtd(' + p.id + ',1)">+</button></div>' +
+      '<button class="add-to-cart-btn" onclick="adicionarAoCarrinho(' + p.id + ')">ADICIONAR À SACOLA</button></div>';
     grid.appendChild(el);
-    document.getElementById(`img-container-${p.id}`).dataset.currentIndex = 0;
+    document.getElementById('img-container-' + p.id).dataset.currentIndex = 0;
   });
 }
-
 function mudarFoto(id, d) {
-  const c = document.getElementById(`img-container-${id}`);
+  const c = document.getElementById('img-container-' + id);
   const prod = produtos.find(x => x.id === id);
   let idx = parseInt(c.dataset.currentIndex) + d;
   if (idx < 0) idx = prod.imagens.length - 1;
@@ -253,7 +240,6 @@ function mudarFoto(id, d) {
   c.querySelectorAll('img').forEach((img, i) => img.classList.toggle('active', i === idx));
   c.querySelectorAll('.card-dot').forEach((dot, i) => dot.classList.toggle('active', i === idx));
 }
-
 function filtrarPorCategoria(cat, ev) {
   if (ev) ev.preventDefault();
   categoriaAtual = cat;
@@ -266,7 +252,6 @@ function filtrarPorCategoria(cat, ev) {
   else if (cat === 'promocao') { filtrados = produtos.filter(p => p.promocao); tit.innerText = 'Calçados em Promoção'; }
   renderizarProdutos(filtrados);
 }
-
 function filtrarProdutos() {
   const t = document.getElementById('searchInput').value.toLowerCase();
   let base = produtos.filter(p => {
@@ -277,24 +262,21 @@ function filtrarProdutos() {
   });
   renderizarProdutos(base.filter(p => p.nome.toLowerCase().includes(t)));
 }
-
 function mudarQtd(id, d) {
-  const s = document.getElementById(`qtd-${id}`);
+  const s = document.getElementById('qtd-' + id);
   if (!s) return;
   let v = parseInt(s.innerText) + d;
   if (v < 1) v = 1;
   s.innerText = v;
 }
-
 function adicionarAoCarrinho(id) {
   const prod = produtos.find(p => p.id === id);
-  const qtd = parseInt(document.getElementById(`qtd-${id}`).innerText) || 1;
+  const qtd = parseInt(document.getElementById('qtd-' + id).innerText) || 1;
   const item = carrinho.find(i => i.id === id);
-  if (item) item.qtd += qtd; else carrinho.push({ ...prod, imagem: prod.imagens[0], qtd });
+  if (item) item.qtd += qtd; else carrinho.push({ id: prod.id, nome: prod.nome, preco: prod.preco, imagem: prod.imagens[0], qtd });
   atualizarCarrinho();
   toggleCart();
 }
-
 function atualizarCarrinho() {
   const items = document.getElementById('cartItems');
   const count = document.getElementById('cartCount');
@@ -310,45 +292,32 @@ function atualizarCarrinho() {
   carrinho.forEach((item, idx) => {
     const sub = item.preco * item.qtd;
     tot += sub;
-    items.innerHTML += `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;">
-        <img src="${item.imagem}" style="width:50px;height:50px;object-fit:cover;border-radius:4px;">
-        <div style="flex:1;margin-left:10px;font-size:12px;">
-          <strong>${item.nome}</strong>
-          <div>${item.qtd}x R$ ${item.preco.toFixed(2).replace('.',',')}</div>
-        </div>
-        <button onclick="removerItem(${idx})" style="background:none;border:none;color:red;cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
-      </div>`;
+    items.innerHTML += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;"><img src="' + item.imagem + '" style="width:50px;height:50px;object-fit:cover;border-radius:4px;"><div style="flex:1;margin-left:10px;font-size:12px;"><strong>' + item.nome + '</strong><div>' + item.qtd + 'x R$ ' + item.preco.toFixed(2).replace('.',',') + '</div></div><button onclick="removerItem(' + idx + ')" style="background:none;border:none;color:red;cursor:pointer;"><i class="fa-solid fa-trash"></i></button></div>';
   });
-  total.innerText = `R$ ${tot.toFixed(2).replace('.',',')}`;
+  total.innerText = 'R$ ' + tot.toFixed(2).replace('.',',');
 }
-
 function removerItem(idx) {
   carrinho.splice(idx, 1);
   atualizarCarrinho();
 }
-
 function toggleCart() {
   document.getElementById('cartModal').classList.toggle('open');
 }
-
 function closePopup() {
   const p = document.getElementById('popupOverlay');
   if (p) p.style.display = 'none';
 }
-
 function checkoutWhatsApp() {
   if (carrinho.length === 0) { alert('Seu carrinho está vazio!'); return; }
   let msg = 'Olá! Gostaria de finalizar o pedido:\n\n';
   let tot = 0;
-  carrinho.forEach(item => { const sub = item.preco * item.qtd; tot += sub; msg += `• ${item.qtd}x ${item.nome} - R$ ${sub.toFixed(2).replace('.',',')}\n`; });
-  msg += `\n*Total: R$ ${tot.toFixed(2).replace('.',',')}*`;
-  window.open(`https://wa.me/5527997787772?text=${encodeURIComponent(msg)}`, '_blank');
+  carrinho.forEach(item => { const sub = item.preco * item.qtd; tot += sub; msg += '• ' + item.qtd + 'x ' + item.nome + ' - R$ ' + sub.toFixed(2).replace('.',',') + '\n'; });
+  msg += '\n*Total: R$ ' + tot.toFixed(2).replace('.',',') + '*';
+  window.open('https://wa.me/5527997787772?text=' + encodeURIComponent(msg), '_blank');
 }
-
 window.onload = function() {
   renderizarProdutos(produtos.filter(p => p.categoria === 'lancamento'));
 };
-    </script>
+</script>
 </body>
 </html>
