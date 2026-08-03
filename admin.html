@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,7 +8,7 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; color: #2d2d2d; line-height: 1.5; padding: 20px; }
-.container { max-width: 900px; margin: auto; }
+.container { max-width: 960px; margin: auto; }
 .header { background: #b83280; color: #fff; padding: 24px; border-radius: 14px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .header h1 { font-size: 22px; }
 .header p { font-size: 13px; opacity: .9; }
@@ -27,7 +26,10 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:
 .pedido-itens h4 { font-size: 13px; margin-bottom: 8px; color: #444; }
 .item-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px dashed #e5e5e5; }
 .item-row:last-child { border-bottom: none; }
-.pedido-total { font-size: 18px; font-weight: 800; color: #b83280; text-align: right; margin-bottom: 12px; }
+.pedido-totais { background: #fafafa; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+.totais-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+.totais-row.total { font-size: 16px; font-weight: 800; color: #b83280; border-top: 1px solid #e5e5e5; padding-top: 6px; margin-top: 4px; }
+.totais-row .gratis { color: #15803d; font-weight: 700; }
 .acoes { display: flex; gap: 10px; flex-wrap: wrap; }
 .btn { border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: .2s; display: inline-flex; align-items: center; gap: 6px; }
 .btn-confirmar { background: #38a169; color: #fff; }
@@ -65,16 +67,33 @@ function mostrarToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+function formatarEndereco(pedido) {
+  if (pedido.endereco && typeof pedido.endereco === 'object') {
+    const e = pedido.endereco;
+    let s = e.rua + ', ' + e.numero;
+    if (e.complemento) s += ' - ' + e.complemento;
+    s += '<br>' + e.cidade + '/' + e.estado + ' - CEP ' + e.cep;
+    return s;
+  }
+  return pedido.endereco || 'Não informado';
+}
+
 function gerarMensagemWhatsApp(pedido) {
   let texto = 'Olá! Novo pedido na Espaço Cris Calçados:%0A%0A';
   texto += '*Cliente:* ' + encodeURIComponent(pedido.nome) + '%0A';
   texto += '*Telefone:* ' + encodeURIComponent(pedido.telefone) + '%0A';
-  if (pedido.endereco) texto += '*Endereço:* ' + encodeURIComponent(pedido.endereco) + '%0A';
+  if (pedido.email) texto += '*E-mail:* ' + encodeURIComponent(pedido.email) + '%0A';
+  texto += '*Endereço:* ' + encodeURIComponent(formatarEndereco(pedido).replace(/<br>/g, ' ')) + '%0A';
   texto += '%0A*Itens:*%0A';
   pedido.itens.forEach(item => {
     texto += '• ' + encodeURIComponent(item.nome) + ' - Qtd: ' + item.qtd + ' - R$ ' + (item.preco * item.qtd).toFixed(2).replace('.', ',') + '%0A';
   });
-  texto += '%0A*Total: R$ ' + pedido.total.toFixed(2).replace('.', ',') + '*%0A';
+  if (typeof pedido.subtotal === 'number') {
+    texto += '%0A*Subtotal: R$ ' + pedido.subtotal.toFixed(2).replace('.', ',') + '*%0A';
+    const freteStr = pedido.frete === 0 ? 'GRÁTIS' : 'R$ ' + (pedido.frete || 0).toFixed(2).replace('.', ',');
+    texto += '*Frete: ' + freteStr + '*%0A';
+  }
+  texto += '*Total: R$ ' + pedido.total.toFixed(2).replace('.', ',') + '*%0A';
   texto += '%0A*Chave PIX usada:* ' + pedido.chavePix + '%0A';
   texto += '*ID do Pedido:* ' + pedido.id;
   return 'https://wa.me/5527997787772?text=' + texto;
@@ -83,7 +102,6 @@ function gerarMensagemWhatsApp(pedido) {
 function carregarPedidos() {
   const container = document.getElementById('listaPedidos');
   let pedidos = JSON.parse(localStorage.getItem('pedidos_pendentes') || '[]');
-  // Ordenar: pendentes primeiro, depois por data
   pedidos.sort((a, b) => {
     if (a.status === b.status) return new Date(b.data) - new Date(a.data);
     return a.status === 'pendente' ? -1 : 1;
@@ -106,6 +124,15 @@ function carregarPedidos() {
     });
     itensHtml += '</div>';
 
+    let freteStr = (typeof p.frete === 'number' && p.frete === 0) ? 'GRÁTIS' : 'R$ ' + (p.frete || 15).toFixed(2).replace('.', ',');
+    let totaisHtml = '<div class="pedido-totais">';
+    if (typeof p.subtotal === 'number') {
+      totaisHtml += '<div class="totais-row"><span>Subtotal</span><span>R$ ' + p.subtotal.toFixed(2).replace('.', ',') + '</span></div>';
+      totaisHtml += '<div class="totais-row"><span>Frete</span><span class="' + (p.frete === 0 ? 'gratis' : '') + '">' + freteStr + '</span></div>';
+    }
+    totaisHtml += '<div class="totais-row total"><span>Total</span><span>R$ ' + p.total.toFixed(2).replace('.', ',') + '</span></div>';
+    totaisHtml += '</div>';
+
     let acoesHtml = '';
     if (!confirmado) {
       acoesHtml += '<button class="btn btn-confirmar" onclick="confirmarPedido(\'' + p.id + '\')"><i class="fa-solid fa-check"></i> Confirmar PIX</button>';
@@ -121,12 +148,13 @@ function carregarPedidos() {
       '</div>' +
       '<div class="pedido-dados">' +
         '<strong>Cliente:</strong> ' + escapeHtml(p.nome) + '<br>' +
+        '<strong>E-mail:</strong> ' + escapeHtml(p.email || 'Não informado') + '<br>' +
         '<strong>Telefone:</strong> ' + escapeHtml(p.telefone) + '<br>' +
-        (p.endereco ? '<strong>Endereço:</strong> ' + escapeHtml(p.endereco) + '<br>' : '') +
+        '<strong>Endereço:</strong> ' + formatarEndereco(p) + '<br>' +
         '<strong>Data:</strong> ' + new Date(p.data).toLocaleString('pt-BR') +
       '</div>' +
       itensHtml +
-      '<div class="pedido-total">Total: R$ ' + p.total.toFixed(2).replace('.', ',') + '</div>' +
+      totaisHtml +
       '<div class="acoes">' + acoesHtml + '</div>';
     container.appendChild(card);
   });
@@ -174,7 +202,6 @@ function copiarMensagem(id) {
   });
 }
 
-// Atualizar a cada 3 segundos para ver novos pedidos
 setInterval(carregarPedidos, 3000);
 carregarPedidos();
 </script>
