@@ -1,6 +1,5 @@
 /* Espaço Cris Calçados — vitrine + carrinho
- * Produtos carregados do Supabase. Os preços de venda já estão com
- * 100% de margem sobre o custo cadastrado do fornecedor.
+ * Produtos e imagens carregados do Supabase.
  */
 const SUPABASE_URL = "https://nnhljxmmrqekoxcapdkm.supabase.co";
 const SUPABASE_KEY = "sb_publishable_mPNEE_t2HTfU5f2rUDwrig_u9ls7HrE";
@@ -16,7 +15,7 @@ const money = value =>
 async function carregarProdutos() {
     const url =
         `${SUPABASE_URL}/rest/v1/produtos` +
-        `?select=id,nome,preco,custo_fornecedor,destaque,produto_imagens(url,ordem)` +
+        `?select=id,nome,preco,destaque,produto_imagens(url,ordem)` +
         `&ativo=eq.true&order=destaque.desc,created_at.desc`;
 
     try {
@@ -40,7 +39,6 @@ async function carregarProdutos() {
                 id: p.id,
                 name: p.nome,
                 price: Number(p.preco),
-                cost: Number(p.custo_fornecedor || 0),
                 image: imagens[0]?.url || "https://via.placeholder.com/600x600?text=Espa%C3%A7o+Cris",
                 installment: "Consulte as condições de pagamento"
             };
