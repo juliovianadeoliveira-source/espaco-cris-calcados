@@ -88,7 +88,7 @@ const offer=$('#offer');$('#closeOffer').onclick=()=>offer.classList.add('hidden
 <script>
 (function(){
  const launch=document.getElementById('chatLaunch'),win=document.getElementById('chatWindow'),close=document.getElementById('chatClose'),messages=document.getElementById('chatMessages'),form=document.getElementById('chatForm'),input=document.getElementById('chatInput');
- const state={name:'',lastTopic:'',lastProducts:[]};
+ const state={name:'',lastTopic:'',lastProducts:[],selectedProduct:null,selectedSize:'',selectedQty:0};
  const norm=v=>String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
  const reais=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
  function msg(text,who='bot'){const d=document.createElement('div');d.className='chat-msg '+who;d.textContent=text;messages.appendChild(d);messages.scrollTop=messages.scrollHeight}
@@ -102,43 +102,72 @@ const offer=$('#offer');$('#closeOffer').onclick=()=>offer.classList.add('hidden
    if(size)path+='&tamanho=eq.'+encodeURIComponent(size);
    try{return await api(path)}catch(e){return[]}
  }
+ function resetChoice(){state.selectedProduct=null;state.selectedSize='';state.selectedQty=0}
  async function recommend(raw){
+   resetChoice();
    const q=norm(raw),wanted=(q.match(/\b(3[4-9]|40)\b/)||[])[1]||'';
    let list=allProducts();
-   if(/rasteir/.test(q))list=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes('rasteir'));
-   else if(/sandalia/.test(q))list=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes('sandalia'));
-   else if(/tamanco/.test(q))list=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes('tamanco'));
-   else if(/chinelo/.test(q))list=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes('chinelo'));
+   if(/rasteir/.test(q))list=list.filter(p=>norm(p.nome).includes('rasteir'));
+   else if(/sandalia/.test(q)){const exact=list.filter(p=>norm(p.nome).includes('sandalia'));if(exact.length)list=exact}
+   else if(/tamanco/.test(q))list=list.filter(p=>norm(p.nome).includes('tamanco'));
+   else if(/chinelo/.test(q))list=list.filter(p=>norm(p.nome).includes('chinelo'));
    const colors=['preta','preto','nude','dourada','dourado','caramelo','branca','branco','rosa','prata'];
-   const color=colors.find(x=>q.includes(x));if(color)list=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes(color.replace(/a$/,'')));
-   if(/basic/.test(q)){const clean=list.filter(p=>!/(brilho|strass|crystal|cristal|glitter|pedraria)/.test(norm(p.nome+' '+(p.descricao||''))));if(clean.length)list=clean}
-   if(/brilho|strass|cristal|crystal|glitter|pedraria/.test(q)){const shine=list.filter(p=>/(brilho|strass|crystal|cristal|glitter|pedraria)/.test(norm(p.nome+' '+(p.descricao||''))));if(shine.length)list=shine}
-   let sizeRows=await sizesFor(list.map(p=>p.id),wanted);
-   if(wanted){const ids=new Set(sizeRows.map(x=>x.produto_id));list=list.filter(p=>ids.has(p.id))}
+   const color=colors.find(x=>q.includes(x));if(color){const colored=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes(color.replace(/a$/,'')));if(colored.length)list=colored}
+   if(/basic/.test(q)){const clean=list.filter(p=>!/(brilho|strass|crystal|cristal|glitter|pedraria|shine|glam)/.test(norm(p.nome+' '+(p.descricao||''))));if(clean.length)list=clean}
+   if(/brilho|strass|cristal|crystal|glitter|pedraria/.test(q)){const shine=list.filter(p=>/(brilho|strass|crystal|cristal|glitter|pedraria|shine|glam)/.test(norm(p.nome+' '+(p.descricao||''))));if(shine.length)list=shine}
+   let sizeRows=[];
+   if(wanted){sizeRows=await sizesFor(list.map(p=>p.id),wanted);const ids=new Set(sizeRows.map(x=>x.produto_id));list=list.filter(p=>ids.has(p.id))}
    list=list.slice(0,4);
-   if(!list.length){msg(wanted?'No momento não encontrei esse estilo disponível no número '+wanted+'. Você aceita outra cor ou outro tipo de rasteira?':'Não encontrei exatamente esse estilo agora. Me diga uma cor e a numeração que você usa para eu procurar outras opções.');state.lastTopic='alternatives';return}
+   if(!list.length){msg(wanted?'Não encontrei esse estilo no número '+wanted+' agora. Você prefere que eu procure outra cor mantendo o 35, ou outro número?':'Não encontrei exatamente esse estilo. Me diga outra cor ou outro tipo de calçado que eu procuro para você.');state.lastTopic='alternatives';return}
    if(!wanted)sizeRows=await sizesFor(list.map(p=>p.id),'');
-   const lines=list.map((p,i)=>{const sizes=[...new Set(sizeRows.filter(x=>x.produto_id===p.id).map(x=>x.tamanho))];return (i+1)+'. '+p.nome+' — '+reais(salePrice(p))+(sizes.length?'\n   Tamanhos: '+sizes.join(', '):'')});
-   state.lastProducts=list;state.lastTopic='product';
-   msg((wanted?'Encontrei estas opções disponíveis no número '+wanted+':':'Olha estas opções que separei para você:')+'\n\n'+lines.join('\n\n')+'\n\nQual delas você gostou?');
+   state.lastProducts=list.map(p=>({product:p,sizes:[...new Set(sizeRows.filter(x=>x.produto_id===p.id).map(x=>String(x.tamanho)))]}));
+   const lines=state.lastProducts.map((item,i)=>(i+1)+'. '+item.product.nome+' — '+reais(salePrice(item.product))+(item.sizes.length?'\n   Tamanhos: '+item.sizes.join(', '):''));
+   state.lastTopic='choose_product';
+   msg((wanted?'Encontrei estas opções no número '+wanted+':':'Separei estas opções para você:')+'\n\n'+lines.join('\n\n')+'\n\nQual você escolhe? Responda com o número de 1 a '+list.length+'.');
+ }
+ async function chooseProduct(index){
+   const item=state.lastProducts[index-1];if(!item){msg('Essa opção não está na lista. Escolha um número de 1 a '+state.lastProducts.length+'.');return}
+   state.selectedProduct=item.product;state.selectedSize='';state.selectedQty=0;
+   if(!item.sizes.length)item.sizes=(await sizesFor([item.product.id],'')).map(x=>String(x.tamanho));
+   state.lastTopic='choose_size';
+   msg('Você escolheu '+item.product.nome+', no valor de '+reais(salePrice(item.product))+'.\nTamanhos disponíveis: '+(item.sizes.join(', ')||'consulte disponibilidade')+'.\nQual numeração você deseja?');
+ }
+ async function chooseSize(size){
+   const item=state.lastProducts.find(x=>x.product.id===state.selectedProduct?.id);
+   const available=item?.sizes||[];
+   if(available.length&&!available.includes(size)){msg('Esse modelo não está disponível no '+size+'. Tenho estes tamanhos: '+available.join(', ')+'. Qual deles você prefere?');return}
+   state.selectedSize=size;state.lastTopic='choose_qty';
+   msg('Certo, número '+size+'. Quantos pares você deseja?');
+ }
+ function chooseQty(qty){
+   if(qty<1||qty>20){msg('Digite uma quantidade de 1 a 20 pares.');return}
+   state.selectedQty=qty;state.lastTopic='confirm_item';
+   const unit=salePrice(state.selectedProduct),total=unit*qty;
+   msg('Só para confirmar:\n\n'+state.selectedProduct.nome+'\nTamanho: '+state.selectedSize+'\nQuantidade: '+qty+'\nValor unitário: '+reais(unit)+'\nTotal: '+reais(total)+'\n\nEstá correto?');
  }
  async function answer(raw){
-   const q=raw.trim(),s=norm(q);
+   const q=raw.trim(),s=norm(q),number=Number((s.match(/^\s*(\d{1,2})\s*$/)||[])[1]||0);
+   if(state.lastTopic==='choose_product'&&number>=1&&number<=state.lastProducts.length){await chooseProduct(number);return}
+   if(state.lastTopic==='choose_size'&&/^(3[4-9]|40)$/.test(s)){await chooseSize(s);return}
+   if(state.lastTopic==='choose_qty'&&number){chooseQty(number);return}
+   if(state.lastTopic==='confirm_item'&&/^(sim|s|certo|correto|confirmo|pode)$/.test(s)){state.lastTopic='confirmed';msg('Perfeito! Guardei exatamente esse modelo, tamanho e quantidade. Para continuar o atendimento, me diga o nome completo de quem vai receber o pedido.');return}
+   if(state.lastTopic==='confirm_item'&&/^(nao|não|n|errado|corrigir)$/.test(s)){state.lastTopic='choose_product';msg('Sem problema. O que deseja corrigir: produto, tamanho ou quantidade?');return}
+   if(state.lastTopic==='confirmed'&&q.length>3){state.name=q;state.lastTopic='customer_name';msg('Obrigada, '+q+'. Agora me diga o telefone com DDD para eu continuar o atendimento.');return}
+   if(state.lastTopic==='customer_name'&&q.replace(/\D/g,'').length>=10){state.lastTopic='customer_phone';msg('Certo. Agora informe o CEP de entrega.');return}
+   if(state.lastTopic==='customer_phone'&&/^\d{5}-?\d{3}$/.test(q.replace(/\s/g,''))){state.lastTopic='customer_cep';msg('Obrigada. Já tenho o produto, tamanho, quantidade, nome, telefone e CEP. Para sua segurança, a confirmação final e o PIX só são gerados no fechamento oficial do pedido.');return}
    const nameMatch=q.match(/(?:meu nome [ée]|me chamo|sou a?|sou o)\s+([A-Za-zÀ-ÿ]{2,}(?:\s+[A-Za-zÀ-ÿ]{2,})?)/i);
    if(nameMatch){state.name=nameMatch[1];msg('Prazer, '+state.name+'! 😊 Me fala o modelo, a cor e a numeração que você procura.');return}
-   if(/^(oi|ola|oie|bom dia|boa tarde|boa noite)[!. ]*$/.test(s)){msg('Oi'+(state.name?', '+state.name:'')+'! Tudo bem? Me diga o tipo de calçado, a cor ou a numeração que você procura.');return}
+   if(/^(oi|ola|oie|bom dia|boa tarde|boa noite)[!. ]*$/.test(s)){msg('Oi'+(state.name?', '+state.name:'')+'! Tudo bem? O que você está procurando hoje?');return}
    if(/(valor|preco|quanto custa|modelo|sandalia|rasteira|tamanco|chinelo|comprar|basic|brilho|strass|cristal|preta|preto|nude|dourad|caramelo|branc|rosa|prata)/.test(s)||(/\b(3[4-9]|40)\b/.test(s)&&state.lastTopic!=='order')){await recommend(q);return}
-   if(/(tamanho|numero|numeracao|calca)/.test(s)){msg('Claro! Me diga o tipo de calçado e sua numeração, por exemplo: “rasteira básica 35”. Eu verifico os modelos, valores e tamanhos disponíveis para você.');state.lastTopic='size';return}
+   if(/(tamanho|numero|numeracao|calca)/.test(s)){msg('Me diga o tipo de calçado e a numeração, por exemplo: “rasteira básica 35”. Eu verifico os modelos e valores disponíveis.');state.lastTopic='size';return}
    if(/(frete|entrega|cep|chega|prazo)/.test(s)){msg('O frete é calculado pelo CEP e fica grátis nas compras acima de R$ 200. Me diga seu CEP para eu continuar te orientando.');state.lastTopic='shipping';return}
-   if(state.lastTopic==='shipping'&&/\d{5}[- ]?\d{3}/.test(s)){msg('Obrigada! O valor e o prazo exatos são calculados antes da confirmação da compra. Acima de R$ 200 o frete fica grátis.');return}
-   if(/(pix|pagamento|pagar|cartao|dinheiro|qr)/.test(s)){msg('O pagamento é feito por PIX. Na finalização aparece o QR Code e o código Copia e Cola já com o valor correto do pedido.');state.lastTopic='payment';return}
+   if(state.lastTopic==='shipping'&&/\d{5}[- ]?\d{3}/.test(s)){msg('Obrigada! O valor e o prazo exatos são calculados no fechamento. Acima de R$ 200 o frete fica grátis.');return}
+   if(/(pix|pagamento|pagar|cartao|dinheiro|qr)/.test(s)){msg('O pagamento é feito por PIX. Na finalização aparece o QR Code e o código Copia e Cola com o valor exato.');state.lastTopic='payment';return}
    if(/(pedido|acompanhar|status|rastre|onde esta)/.test(s)){msg('Me diga o número do pedido e o nome usado na compra. Não envie senha nem código do banco.');state.lastTopic='order';return}
-   if(state.lastTopic==='order'){msg('Obrigada. As atualizações desse pedido são enviadas para o e-mail cadastrado. Me diga também se ele está aguardando PIX, pago ou em preparação para eu te orientar.');return}
-   if(/(revenda|revendedora|revender)/.test(s)){msg('Para ser revendedora você cria seu usuário e senha, confirma o e-mail e aguarda a aprovação da Espaço Cris. Depois da liberação, já pode montar e enviar seus pedidos pelo catálogo de revenda.');state.lastTopic='reseller';return}
-   if(/(atendente|whatsapp|humano|pessoa|falar com cris)/.test(s)){msg('Pode falar comigo por aqui. Explique o que aconteceu e eu vou te orientar sem abrir outra página.');return}
+   if(state.lastTopic==='order'){msg('Obrigada. As atualizações são enviadas para o e-mail cadastrado. O pedido está aguardando PIX, pago ou em preparação?');return}
+   if(/(revenda|revendedora|revender)/.test(s)){msg('Para ser revendedora você cria usuário e senha, confirma o e-mail e aguarda a aprovação. Depois da liberação, pode montar e enviar pedidos pelo catálogo de revenda.');state.lastTopic='reseller';return}
    if(/(obrigad|valeu)/.test(s)){msg('Eu que agradeço! 💗 Quando precisar, pode me chamar.');return}
-   if(/^(sim|gostei|esse|essa|primeiro|segundo|terceiro|quarto|[1-4])$/.test(s)&&state.lastTopic==='product'){msg('Ótima escolha! Qual numeração você usa e quantos pares deseja?');state.lastTopic='size';return}
-   msg('Quero entender direitinho para não repetir informação. Me diga em uma frase o produto, a cor e a numeração. Exemplo: “rasteira nude número 35”.');
+   msg('Não entendi totalmente. Me diga o produto, a cor e a numeração que você procura, ou pergunte sobre frete, pagamento ou pedido.');
  }
  function ask(q){msg(q,'user');const t=typing();const delay=Math.min(1800,750+q.length*18);setTimeout(async()=>{try{await answer(q)}catch(e){msg('Desculpe, tive uma dificuldade para consultar os modelos agora. Tente me dizer novamente o tipo e a numeração.')}finally{t.remove();messages.scrollTop=messages.scrollHeight}},delay)}
  launch.onclick=()=>{win.classList.toggle('hidden');launch.querySelector('.chat-dot').style.display='none';greeting();if(!win.classList.contains('hidden'))setTimeout(()=>input.focus(),100)};
