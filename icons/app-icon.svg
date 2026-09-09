@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#5d0b2b"/><stop offset="1" stop-color="#d81b60"/></linearGradient></defs>
+<rect width="512" height="512" rx="116" fill="url(#g)"/>
+<circle cx="256" cy="256" r="172" fill="#fff" opacity=".98"/>
+<path d="M129 307c55-4 99-28 127-76 19-33 43-44 73-30 28 13 48 40 59 78 5 18-3 36-20 44-67 32-145 45-233 38-21-2-33-23-24-42 4-7 10-11 18-12Z" fill="#d81b60"/>
+<path d="M169 284c28-11 53-32 74-65 19-30 37-40 55-31 15 7 25 23 31 47-42 24-95 41-160 49Z" fill="#f9a8c6"/>
+<text x="256" y="155" text-anchor="middle" font-family="Arial,sans-serif" font-size="66" font-weight="900" fill="#35121f">CRIS</text>
+</svg>
