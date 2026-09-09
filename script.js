@@ -12,10 +12,23 @@ let selectedSizes = {};
 const money = value =>
     Number(value || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
+function saveCart() {
+    sessionStorage.setItem("espaco_cris_cart", JSON.stringify(cart));
+}
+
+function loadCart() {
+    try {
+        const saved = JSON.parse(sessionStorage.getItem("espaco_cris_cart") || "[]");
+        cart = Array.isArray(saved) ? saved : [];
+    } catch {
+        cart = [];
+    }
+}
+
 async function carregarProdutos() {
     const url =
         `${SUPABASE_URL}/rest/v1/produtos` +
-        `?select=id,nome,preco,destaque,produto_imagens(url,ordem)` +
+        `?select=id,nome,preco,preco_promocional,destaque,produto_imagens(url,ordem)` +
         `&ativo=eq.true&order=destaque.desc,created_at.desc`;
 
     try {
@@ -34,11 +47,13 @@ async function carregarProdutos() {
             const imagens = Array.isArray(p.produto_imagens)
                 ? [...p.produto_imagens].sort((a, b) => (a.ordem || 0) - (b.ordem || 0))
                 : [];
-
+            const regular = Number(p.preco || 0);
+            const promo = Number(p.preco_promocional || 0);
+            const price = promo > 0 && promo < regular ? promo : regular;
             return {
                 id: p.id,
                 name: p.nome,
-                price: Number(p.preco),
+                price,
                 image: imagens[0]?.url || "https://via.placeholder.com/600x600?text=Espa%C3%A7o+Cris",
                 installment: "Consulte as condições de pagamento"
             };
@@ -61,16 +76,13 @@ async function carregarProdutos() {
 function renderProducts(itemsToRender) {
     const grid = document.getElementById("productsGrid");
     if (!grid) return;
-
     grid.innerHTML = "";
 
     itemsToRender.forEach(product => {
         const qty = productQuantities[product.id] || 1;
         const size = selectedSizes[product.id] || "";
-
         const card = document.createElement("div");
         card.className = "product-card";
-
         card.innerHTML = `
             <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy"
                  onerror="this.src='https://via.placeholder.com/600x600?text=Imagem'">
@@ -78,35 +90,23 @@ function renderProducts(itemsToRender) {
                 <h4 class="product-title">${product.name}</h4>
                 <div class="product-price">${money(product.price)}</div>
                 <div class="product-installment">${product.installment}</div>
-
                 <label style="display:block;margin:10px 0 6px;font-size:13px">Numeração</label>
-                <select id="size-${product.id}" onchange="selecionarTamanho('${product.id}', this.value)"
-                        style="width:100%;padding:8px;border-radius:6px">
+                <select id="size-${product.id}" onchange="selecionarTamanho('${product.id}', this.value)" style="width:100%;padding:8px;border-radius:6px">
                     <option value="">Escolha o tamanho</option>
-                    ${[34,35,36,37,38,39,40].map(n =>
-                        `<option value="${n}" ${String(size) === String(n) ? "selected" : ""}>${n}</option>`
-                    ).join("")}
+                    ${[34,35,36,37,38,39,40].map(n => `<option value="${n}" ${String(size) === String(n) ? "selected" : ""}>${n}</option>`).join("")}
                 </select>
-
                 <div class="quantity-control">
                     <button onclick="changeCardQty('${product.id}', -1)">-</button>
                     <span>${qty} par(es)</span>
                     <button onclick="changeCardQty('${product.id}', 1)">+</button>
                 </div>
-
-                <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">
-                    Adicionar ao Carrinho
-                </button>
-            </div>
-        `;
-
+                <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">Adicionar ao Carrinho</button>
+            </div>`;
         grid.appendChild(card);
     });
 }
 
-function selecionarTamanho(productId, size) {
-    selectedSizes[productId] = size;
-}
+function selecionarTamanho(productId, size) { selectedSizes[productId] = size; }
 
 function changeCardQty(productId, change) {
     productQuantities[productId] = Math.max(1, (productQuantities[productId] || 1) + change);
@@ -116,25 +116,15 @@ function changeCardQty(productId, change) {
 function addToCart(productId) {
     const product = products.find(p => String(p.id) === String(productId));
     if (!product) return;
-
     const size = selectedSizes[productId];
-    if (!size) {
-        alert("Escolha a numeração antes de adicionar o produto.");
-        return;
-    }
-
+    if (!size) return alert("Escolha a numeração antes de adicionar o produto.");
     const quantity = productQuantities[productId] || 1;
     const existingItem = cart.find(item => String(item.id) === String(productId) && String(item.size) === String(size));
-
-    if (existingItem) {
-        existingItem.quantity += quantity;
-    } else {
-        cart.push({ ...product, size, quantity });
-    }
-
+    if (existingItem) existingItem.quantity = Math.min(20, existingItem.quantity + quantity);
+    else cart.push({ ...product, size, quantity });
     productQuantities[productId] = 1;
     selectedSizes[productId] = "";
-
+    saveCart();
     updateCartUI();
     toggleCart();
 }
@@ -143,21 +133,15 @@ function updateCartUI() {
     const cartCount = document.getElementById("cartCount");
     const cartItemsContainer = document.getElementById("cartItems");
     const cartTotal = document.getElementById("cartTotal");
-
     if (!cartItemsContainer || !cartTotal) return;
-
-    let totalCount = 0;
-    let totalPrice = 0;
-
+    let totalCount = 0, totalPrice = 0;
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = `<p class="empty-cart">Seu carrinho está vazio.</p>`;
     } else {
         cartItemsContainer.innerHTML = "";
-
         cart.forEach((item, index) => {
             totalCount += item.quantity;
             totalPrice += item.price * item.quantity;
-
             const itemRow = document.createElement("div");
             itemRow.className = "cart-item-row";
             itemRow.innerHTML = `
@@ -166,25 +150,30 @@ function updateCartUI() {
                     <p>${item.quantity}x ${money(item.price)} — Tam. ${item.size}</p>
                 </div>
                 <div class="cart-item-actions">
-                    <button onclick="updateCartItemQty(${index}, -1)">-</button>
+                    <button aria-label="Diminuir quantidade" onclick="updateCartItemQty(${index}, -1)">−</button>
                     <span>${item.quantity}</span>
-                    <button onclick="updateCartItemQty(${index}, 1)">+</button>
-                </div>
-            `;
+                    <button aria-label="Aumentar quantidade" onclick="updateCartItemQty(${index}, 1)">+</button>
+                    <button aria-label="Remover produto" class="cart-remove" onclick="removeCartItem(${index})">×</button>
+                </div>`;
             cartItemsContainer.appendChild(itemRow);
         });
     }
-
     if (cartCount) cartCount.innerText = totalCount;
     cartTotal.innerText = money(totalPrice);
 }
 
 function updateCartItemQty(index, change) {
     if (!cart[index]) return;
-
-    cart[index].quantity += change;
+    cart[index].quantity = Math.min(20, cart[index].quantity + change);
     if (cart[index].quantity <= 0) cart.splice(index, 1);
+    saveCart();
+    updateCartUI();
+}
 
+function removeCartItem(index) {
+    if (!cart[index]) return;
+    cart.splice(index, 1);
+    saveCart();
     updateCartUI();
 }
 
@@ -194,26 +183,9 @@ function toggleCart() {
 }
 
 function checkoutWhatsApp() {
-    if (cart.length === 0) {
-        alert("Seu carrinho está vazio!");
-        return;
-    }
-
-    let total = 0;
-    const linhas = cart.map(item => {
-        const subtotal = item.price * item.quantity;
-        total += subtotal;
-        return `• ${item.quantity}x ${item.name} — Tam. ${item.size} — ${money(subtotal)}`;
-    });
-
-    const message =
-        `Olá! Quero fazer um pedido na Espaço Cris Calçados.%0A%0A` +
-        `${linhas.join("%0A")}%0A%0A` +
-        `*Total: ${money(total)}*%0A` +
-        `Aguardando confirmação do pedido.`;
-
-    const phoneNumber = "5500000000000";
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
+    if (cart.length === 0) return alert("Seu carrinho está vazio!");
+    saveCart();
+    window.location.href = "checkout.html?carrinho=1";
 }
 
 function closePopup() {
@@ -228,18 +200,12 @@ function rolarGrid(direcao) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    loadCart();
     const searchInput = document.getElementById("searchInput");
-
-    if (searchInput) {
-        searchInput.addEventListener("input", event => {
-            const term = event.target.value.toLowerCase().trim();
-            const filtered = products.filter(product =>
-                product.name.toLowerCase().includes(term)
-            );
-            renderProducts(filtered);
-        });
-    }
-
+    if (searchInput) searchInput.addEventListener("input", event => {
+        const term = event.target.value.toLowerCase().trim();
+        renderProducts(products.filter(product => product.name.toLowerCase().includes(term)));
+    });
     carregarProdutos();
     updateCartUI();
 });
