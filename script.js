@@ -63,6 +63,10 @@ function initBusca(){
     });
 }
 
+const vitrineStyle=document.createElement('style');
+vitrineStyle.textContent='.product-link{display:block;color:inherit;text-decoration:none}.product-link:visited{color:inherit}.product-link .details{display:block;margin-top:7px;color:var(--pink);font-size:11px;font-weight:900}.product-link:hover .details{text-decoration:underline}';
+document.head.appendChild(vitrineStyle);
+
 document.addEventListener('DOMContentLoaded',()=>{
     carregarCarrinho();
     initBusca();
