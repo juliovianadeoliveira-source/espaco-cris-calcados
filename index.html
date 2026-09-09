@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
+<script>
+(function(){
+  var hash=location.hash||'';
+  var params=new URLSearchParams(hash.replace(/^#/,''));
+  if(params.get('type')==='recovery'||params.get('error')){
+    location.replace('/catalogo/'+location.search+hash);
+  }
+})();
+</script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Espaço Cris Calçados — sandálias, rasteiras e calçados femininos com compra segura.">
 <title>Espaço Cris Calçados</title>
