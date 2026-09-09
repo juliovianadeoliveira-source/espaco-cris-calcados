@@ -89,28 +89,49 @@ const offer=$('#offer');$('#closeOffer').onclick=()=>offer.classList.add('hidden
 <script>
 (function(){
  const launch=document.getElementById('chatLaunch'),win=document.getElementById('chatWindow'),close=document.getElementById('chatClose'),messages=document.getElementById('chatMessages'),quick=document.getElementById('chatQuick'),form=document.getElementById('chatForm'),input=document.getElementById('chatInput');
- const whatsapp='https://wa.me/5527997787772?text='+encodeURIComponent('Olá, vim pelo atendimento automático do site Espaço Cris Calçados e preciso de ajuda.');
- const options=['Ver produtos','Tamanhos','Frete e entrega','Pagamento PIX','Acompanhar pedido','Ser revendedora','Falar com atendente'];
- function msg(text,who='bot',html=false){const d=document.createElement('div');d.className='chat-msg '+who;if(html)d.innerHTML=text;else d.textContent=text;messages.appendChild(d);messages.scrollTop=messages.scrollHeight}
- function buttons(){quick.innerHTML='';options.forEach(label=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=()=>ask(label);quick.appendChild(b)})}
- function welcome(){if(messages.children.length)return;msg('Olá! Eu sou a Cris, atendente virtual da Espaço Cris Calçados. 👡\nComo posso ajudar você hoje?');buttons()}
- function productReply(q){const terms=q.toLowerCase().split(/\s+/).filter(x=>x.length>2);const found=(window.products||[]).filter(p=>terms.some(t=>(p.nome+' '+(p.descricao||'')).toLowerCase().includes(t))).slice(0,3);if(!found.length)return false;msg('Encontrei estas opções: '+found.map(p=>p.nome).join(', ')+'. Toque em “Ver produtos” para conferir fotos, tamanhos e valores.');return true}
- function answer(q){
-  const s=q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  if(/(oi|ola|bom dia|boa tarde|boa noite)/.test(s)){msg('Olá! 😊 Estou aqui para ajudar. Escolha uma opção abaixo ou escreva o que procura.');return}
-  if(/(produto|sandalia|rasteira|modelo|catalogo|comprar)/.test(s)){if(productReply(q))return;msg('Temos sandálias e rasteiras selecionadas. Vou levar você aos produtos agora.');setTimeout(()=>{document.getElementById('produtos')?.scrollIntoView({behavior:'smooth'});win.classList.add('hidden')},900);return}
-  if(/(tamanho|numero|numeracao|calca)/.test(s)){msg('Os tamanhos disponíveis aparecem em cada produto. Abra o modelo desejado, escolha a numeração e a quantidade antes de colocar na sacola.');return}
-  if(/(frete|entrega|cep|chega|prazo)/.test(s)){msg('O frete é calculado pelo CEP durante a compra. Em pedidos acima de R$ 200, o frete é grátis. 🚚');return}
-  if(/(pix|pagamento|pagar|qr)/.test(s)){msg('Aceitamos pagamento por PIX. Depois de finalizar o pedido, o site gera o QR Code e o código PIX Copia e Cola com o valor correto.');return}
-  if(/(pedido|acompanhar|status|rastre)/.test(s)){msg('Para consultar, toque em “Meus pedidos” no topo do site e informe os dados solicitados.');return}
-  if(/(revenda|revendedora|revender)/.test(s)){msg('Quer trabalhar como revendedora? Abra o catálogo exclusivo, crie seu usuário e senha e aguarde a aprovação. <a class="chat-human" href="/catalogo/">ABRIR ÁREA DE REVENDEDORAS</a>', 'bot', true);return}
-  if(/(humano|atendente|whatsapp|pessoa|ajuda)/.test(s)){msg('Claro! Vou passar você para uma atendente. <a class="chat-human" target="_blank" rel="noopener" href="'+whatsapp+'">ABRIR WHATSAPP</a>', 'bot', true);return}
-  msg('Entendi. Posso ajudar com produtos, tamanhos, frete, PIX, pedidos ou cadastro de revendedora. Se preferir, escolha uma opção abaixo.');
+ const state={name:'',lastTopic:''};
+ const options=['Quero uma sandália','Quais tamanhos?','Como funciona o frete?','Como pago?','Onde está meu pedido?','Quero ser revendedora'];
+ function msg(text,who='bot'){const d=document.createElement('div');d.className='chat-msg '+who;d.textContent=text;messages.appendChild(d);messages.scrollTop=messages.scrollHeight}
+ function showOptions(){quick.innerHTML='';options.forEach(label=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=()=>ask(label);quick.appendChild(b)})}
+ function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+ function greeting(){if(messages.children.length)return;msg('Oi! Eu sou a Cris, da Espaço Cris Calçados. 😊 Que bom ter você aqui! Como posso te ajudar? Se quiser, pode escrever normalmente ou escolher uma opção abaixo.');showOptions()}
+ function findProducts(q){
+   const all=window.products||[];
+   const ignore=['quero','uma','sandalia','sandálias','rasteira','produto','modelo','calcado','calçado','comprar','tem','voces','vocês'];
+   const terms=q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(/\s+/).filter(x=>x.length>2&&!ignore.includes(x));
+   let found=terms.length?all.filter(p=>terms.some(t=>(p.nome+' '+(p.descricao||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(t))):all;
+   return found.slice(0,4);
  }
- function ask(q){msg(q,'user');setTimeout(()=>answer(q),350)}
- launch.onclick=()=>{win.classList.toggle('hidden');launch.querySelector('.chat-dot').style.display='none';welcome();if(!win.classList.contains('hidden'))setTimeout(()=>input.focus(),100)};
+ function productNames(q){
+   const found=findProducts(q);
+   if(!found.length){msg('Tenho vários modelos lindos, mas preciso entender melhor o que você procura. Você prefere rasteira, sandália delicada, com brilho ou uma opção mais básica?');state.lastTopic='style';return}
+   const list=found.map((p,i)=>(i+1)+'. '+p.nome+(Number(p.preco)>0?' — '+money(p.preco):'')).join('\n');
+   msg('Separei estas opções para você:\n\n'+list+'\n\nQual delas você gostou mais? Pode me falar o número ou o nome.');
+   state.lastTopic='product';
+ }
+ function answer(raw){
+   const q=raw.trim(),s=q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+   const nameMatch=q.match(/(?:meu nome [ée]|me chamo|sou a?|sou o)\s+([A-Za-zÀ-ÿ]{2,}(?:\s+[A-Za-zÀ-ÿ]{2,})?)/i);
+   if(nameMatch){state.name=nameMatch[1];msg('Prazer, '+state.name+'! 😊 Vou te atender por aqui. O que você está procurando hoje?');return}
+   if(/^(oi|ola|oie|bom dia|boa tarde|boa noite)[!. ]*$/.test(s)){msg('Oi'+(state.name?', '+state.name:'')+'! Tudo bem? Eu sou a Cris. Me conta o que você procura que eu te ajudo por aqui.');return}
+   if(/(sandalia|rasteira|produto|modelo|comprar|brilho|basica|delicada|preta|nude|dourada|caramelo)/.test(s)){productNames(q);return}
+   if(/(tamanho|numero|numeracao|calca)/.test(s)){msg('Trabalho com as numerações mostradas em cada modelo, normalmente do 34 ao 40. Me diga qual sandália você gostou e o número que usa; eu explico direitinho a disponibilidade.');state.lastTopic='size';return}
+   if(/(frete|entrega|cep|chega|prazo)/.test(s)){msg('O frete é calculado pelo seu CEP e fica grátis nas compras acima de R$ 200. Se você me disser o seu CEP, eu explico como a entrega funciona para sua região.');state.lastTopic='shipping';return}
+   if(state.lastTopic==='shipping'&&/\d{5}[- ]?\d{3}/.test(s)){msg('Obrigada! Com esse CEP, o valor e o prazo exatos aparecem antes da confirmação da compra. Acima de R$ 200 o frete fica grátis.');return}
+   if(/(pix|pagamento|pagar|cartao|dinheiro|qr)/.test(s)){msg('O pagamento é feito por PIX com segurança. No final da compra aparece o QR Code e o código Copia e Cola já com o valor correto do pedido.');state.lastTopic='payment';return}
+   if(/(pedido|acompanhar|status|rastre|onde esta)/.test(s)){msg('Eu te ajudo com isso. Me diga o número do pedido e o nome usado na compra. Não envie senha, código do banco ou informação do cartão.');state.lastTopic='order';return}
+   if(state.lastTopic==='order'){msg('Anotei os dados que você informou. A confirmação e as atualizações do pedido são enviadas para o e-mail cadastrado na compra. Se ainda não recebeu, me diga se o pedido está aguardando PIX, pago ou em preparação.');return}
+   if(/(revenda|revendedora|revender)/.test(s)){msg('Que bom que você quer revender com a gente! O cadastro pede nome, telefone, endereço, e-mail e uma senha criada por você. Depois da confirmação do e-mail, a Espaço Cris analisa e libera o acesso. Posso tirar suas dúvidas por aqui.');state.lastTopic='reseller';return}
+   if(/(atendente|whatsapp|humano|pessoa|falar com cris)/.test(s)){msg('Você já está falando comigo, a Cris. Pode explicar aqui mesmo o que aconteceu que eu vou te orientar sem abrir outra página.');return}
+   if(/(obrigad|valeu)/.test(s)){msg('Eu que agradeço! 💗 Sempre que precisar, é só me chamar por aqui.');return}
+   if(/(sim|gostei|esse|essa|primeiro|segundo|terceiro|quarto|^[1-4]$)/.test(s)&&state.lastTopic==='product'){msg('Ótima escolha! Me diga agora a sua numeração e quantos pares você deseja.');state.lastTopic='size';return}
+   msg('Entendi'+(state.name?', '+state.name:'')+'. Quero te ajudar direitinho. Você está procurando um modelo, quer saber sobre tamanho, frete, pagamento ou acompanhar um pedido?');
+ }
+ function ask(q){msg(q,'user');setTimeout(()=>answer(q),320)}
+ launch.onclick=()=>{win.classList.toggle('hidden');launch.querySelector('.chat-dot').style.display='none';greeting();if(!win.classList.contains('hidden'))setTimeout(()=>input.focus(),100)};
  close.onclick=()=>win.classList.add('hidden');
  form.onsubmit=e=>{e.preventDefault();const q=input.value.trim();if(!q)return;input.value='';ask(q)};
- buttons();
+ showOptions();
 })();
-</script>\n<script src="/pwa.js"></script></body></html>
+</script>
+<script src="/pwa.js"></script></body></html>
