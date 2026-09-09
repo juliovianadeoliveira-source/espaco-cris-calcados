@@ -1,5 +1,5 @@
-const CACHE='espaco-cris-app-v1';
-const CORE=['/app.html','/index.html','/catalogo/','/manifest.webmanifest','/icons/app-icon.svg','/pwa.js'];
+const CACHE='espaco-cris-app-v2';
+const CORE=['/app.html','/index.html','/catalogo/','/manifest-loja.webmanifest','/manifest-revendedoras.webmanifest','/icons/espaco-cris-loja.svg','/icons/espaco-cris-revendedoras.svg','/pwa.js'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',event=>{
