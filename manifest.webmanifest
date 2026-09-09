@@ -1,0 +1,51 @@
+{
+  "name": "Espaço Cris Calçados",
+  "short_name": "Espaço Cris",
+  "description": "Loja de calçados e catálogo exclusivo para revendedoras.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "/app.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fff8fb",
+  "theme_color": "#8f1748",
+  "categories": [
+    "shopping",
+    "business"
+  ],
+  "icons": [
+    {
+      "src": "/icons/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Loja principal",
+      "short_name": "Loja",
+      "url": "/index.html",
+      "icons": [
+        {
+          "src": "/icons/app-icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Catálogo da revendedora",
+      "short_name": "Revendedoras",
+      "url": "/catalogo/",
+      "icons": [
+        {
+          "src": "/icons/app-icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
