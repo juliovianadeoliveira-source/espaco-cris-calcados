@@ -88,44 +88,59 @@ const offer=$('#offer');$('#closeOffer').onclick=()=>offer.classList.add('hidden
 <script>
 (function(){
  const launch=document.getElementById('chatLaunch'),win=document.getElementById('chatWindow'),close=document.getElementById('chatClose'),messages=document.getElementById('chatMessages'),form=document.getElementById('chatForm'),input=document.getElementById('chatInput');
- const state={name:'',lastTopic:''};
+ const state={name:'',lastTopic:'',lastProducts:[]};
+ const norm=v=>String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ const reais=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
  function msg(text,who='bot'){const d=document.createElement('div');d.className='chat-msg '+who;d.textContent=text;messages.appendChild(d);messages.scrollTop=messages.scrollHeight}
- function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
- function greeting(){if(messages.children.length)return;msg('Oi! Eu sou a Cris, da Espaço Cris Calçados. 😊 Que bom ter você aqui! Como posso te ajudar? Pode escrever sua dúvida aqui embaixo.')}
- function findProducts(q){
-   const all=window.products||[];
-   const ignore=['quero','uma','sandalia','sandálias','rasteira','produto','modelo','calcado','calçado','comprar','tem','voces','vocês'];
-   const terms=q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(/\s+/).filter(x=>x.length>2&&!ignore.includes(x));
-   let found=terms.length?all.filter(p=>terms.some(t=>(p.nome+' '+(p.descricao||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(t))):all;
-   return found.slice(0,4);
- }
- function productNames(q){
-   const found=findProducts(q);
-   if(!found.length){msg('Tenho vários modelos lindos, mas preciso entender melhor o que você procura. Você prefere rasteira, sandália delicada, com brilho ou uma opção mais básica?');state.lastTopic='style';return}
-   const list=found.map((p,i)=>(i+1)+'. '+p.nome+(Number(p.preco)>0?' — '+money(p.preco):'')).join('\n');
-   msg('Separei estas opções para você:\n\n'+list+'\n\nQual delas você gostou mais? Pode me falar o número ou o nome.');
-   state.lastTopic='product';
- }
- function answer(raw){
-   const q=raw.trim(),s=q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-   const nameMatch=q.match(/(?:meu nome [ée]|me chamo|sou a?|sou o)\s+([A-Za-zÀ-ÿ]{2,}(?:\s+[A-Za-zÀ-ÿ]{2,})?)/i);
-   if(nameMatch){state.name=nameMatch[1];msg('Prazer, '+state.name+'! 😊 Vou te atender por aqui. O que você está procurando hoje?');return}
-   if(/^(oi|ola|oie|bom dia|boa tarde|boa noite)[!. ]*$/.test(s)){msg('Oi'+(state.name?', '+state.name:'')+'! Tudo bem? Eu sou a Cris. Me conta o que você procura que eu te ajudo por aqui.');return}
-   if(/(sandalia|rasteira|produto|modelo|comprar|brilho|basica|delicada|preta|nude|dourada|caramelo)/.test(s)){productNames(q);return}
-   if(/(tamanho|numero|numeracao|calca)/.test(s)){msg('Trabalho com as numerações mostradas em cada modelo, normalmente do 34 ao 40. Me diga qual sandália você gostou e o número que usa; eu explico direitinho a disponibilidade.');state.lastTopic='size';return}
-   if(/(frete|entrega|cep|chega|prazo)/.test(s)){msg('O frete é calculado pelo seu CEP e fica grátis nas compras acima de R$ 200. Se você me disser o seu CEP, eu explico como a entrega funciona para sua região.');state.lastTopic='shipping';return}
-   if(state.lastTopic==='shipping'&&/\d{5}[- ]?\d{3}/.test(s)){msg('Obrigada! Com esse CEP, o valor e o prazo exatos aparecem antes da confirmação da compra. Acima de R$ 200 o frete fica grátis.');return}
-   if(/(pix|pagamento|pagar|cartao|dinheiro|qr)/.test(s)){msg('O pagamento é feito por PIX com segurança. No final da compra aparece o QR Code e o código Copia e Cola já com o valor correto do pedido.');state.lastTopic='payment';return}
-   if(/(pedido|acompanhar|status|rastre|onde esta)/.test(s)){msg('Eu te ajudo com isso. Me diga o número do pedido e o nome usado na compra. Não envie senha, código do banco ou informação do cartão.');state.lastTopic='order';return}
-   if(state.lastTopic==='order'){msg('Anotei os dados que você informou. A confirmação e as atualizações do pedido são enviadas para o e-mail cadastrado na compra. Se ainda não recebeu, me diga se o pedido está aguardando PIX, pago ou em preparação.');return}
-   if(/(revenda|revendedora|revender)/.test(s)){msg('Que bom que você quer revender com a gente! O cadastro pede nome, telefone, endereço, e-mail e uma senha criada por você. Depois da confirmação do e-mail, a Espaço Cris analisa e libera o acesso. Posso tirar suas dúvidas por aqui.');state.lastTopic='reseller';return}
-   if(/(atendente|whatsapp|humano|pessoa|falar com cris)/.test(s)){msg('Você já está falando comigo, a Cris. Pode explicar aqui mesmo o que aconteceu que eu vou te orientar sem abrir outra página.');return}
-   if(/(obrigad|valeu)/.test(s)){msg('Eu que agradeço! 💗 Sempre que precisar, é só me chamar por aqui.');return}
-   if(/(sim|gostei|esse|essa|primeiro|segundo|terceiro|quarto|^[1-4]$)/.test(s)&&state.lastTopic==='product'){msg('Ótima escolha! Me diga agora a sua numeração e quantos pares você deseja.');state.lastTopic='size';return}
-   msg('Entendi'+(state.name?', '+state.name:'')+'. Quero te ajudar direitinho. Você está procurando um modelo, quer saber sobre tamanho, frete, pagamento ou acompanhar um pedido?');
- }
  function typing(){const d=document.createElement('div');d.className='chat-typing';d.setAttribute('aria-label','Cris está digitando');d.innerHTML='<i></i><i></i><i></i>';messages.appendChild(d);messages.scrollTop=messages.scrollHeight;return d}
- function ask(q){msg(q,'user');const t=typing();const delay=Math.min(1800,750+q.length*18);setTimeout(()=>{t.remove();answer(q)},delay)}
+ function greeting(){if(messages.children.length)return;msg('Oi! Eu sou a Cris, da Espaço Cris Calçados. 😊 Que bom ter você aqui! Me fala o modelo, a cor ou a numeração que você procura.')}
+ function allProducts(){try{return typeof products!=='undefined'&&Array.isArray(products)?products:[]}catch(e){return[]}}
+ function salePrice(p){const promo=Number(p.preco_promocional||0),normal=Number(p.preco||0);return promo>0&&promo<normal?promo:normal}
+ async function sizesFor(ids,size){
+   if(!ids.length)return[];
+   let path='produto_tamanhos?select=produto_id,tamanho,estoque,ativo&produto_id=in.('+ids.join(',')+')&ativo=eq.true&estoque=gt.0&order=tamanho.asc';
+   if(size)path+='&tamanho=eq.'+encodeURIComponent(size);
+   try{return await api(path)}catch(e){return[]}
+ }
+ async function recommend(raw){
+   const q=norm(raw),wanted=(q.match(/\b(3[4-9]|40)\b/)||[])[1]||'';
+   let list=allProducts();
+   if(/rasteir/.test(q))list=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes('rasteir'));
+   else if(/sandalia/.test(q))list=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes('sandalia'));
+   else if(/tamanco/.test(q))list=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes('tamanco'));
+   else if(/chinelo/.test(q))list=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes('chinelo'));
+   const colors=['preta','preto','nude','dourada','dourado','caramelo','branca','branco','rosa','prata'];
+   const color=colors.find(x=>q.includes(x));if(color)list=list.filter(p=>norm(p.nome+' '+(p.descricao||'')).includes(color.replace(/a$/,'')));
+   if(/basic/.test(q)){const clean=list.filter(p=>!/(brilho|strass|crystal|cristal|glitter|pedraria)/.test(norm(p.nome+' '+(p.descricao||''))));if(clean.length)list=clean}
+   if(/brilho|strass|cristal|crystal|glitter|pedraria/.test(q)){const shine=list.filter(p=>/(brilho|strass|crystal|cristal|glitter|pedraria)/.test(norm(p.nome+' '+(p.descricao||''))));if(shine.length)list=shine}
+   let sizeRows=await sizesFor(list.map(p=>p.id),wanted);
+   if(wanted){const ids=new Set(sizeRows.map(x=>x.produto_id));list=list.filter(p=>ids.has(p.id))}
+   list=list.slice(0,4);
+   if(!list.length){msg(wanted?'No momento não encontrei esse estilo disponível no número '+wanted+'. Você aceita outra cor ou outro tipo de rasteira?':'Não encontrei exatamente esse estilo agora. Me diga uma cor e a numeração que você usa para eu procurar outras opções.');state.lastTopic='alternatives';return}
+   if(!wanted)sizeRows=await sizesFor(list.map(p=>p.id),'');
+   const lines=list.map((p,i)=>{const sizes=[...new Set(sizeRows.filter(x=>x.produto_id===p.id).map(x=>x.tamanho))];return (i+1)+'. '+p.nome+' — '+reais(salePrice(p))+(sizes.length?'\n   Tamanhos: '+sizes.join(', '):'')});
+   state.lastProducts=list;state.lastTopic='product';
+   msg((wanted?'Encontrei estas opções disponíveis no número '+wanted+':':'Olha estas opções que separei para você:')+'\n\n'+lines.join('\n\n')+'\n\nQual delas você gostou?');
+ }
+ async function answer(raw){
+   const q=raw.trim(),s=norm(q);
+   const nameMatch=q.match(/(?:meu nome [ée]|me chamo|sou a?|sou o)\s+([A-Za-zÀ-ÿ]{2,}(?:\s+[A-Za-zÀ-ÿ]{2,})?)/i);
+   if(nameMatch){state.name=nameMatch[1];msg('Prazer, '+state.name+'! 😊 Me fala o modelo, a cor e a numeração que você procura.');return}
+   if(/^(oi|ola|oie|bom dia|boa tarde|boa noite)[!. ]*$/.test(s)){msg('Oi'+(state.name?', '+state.name:'')+'! Tudo bem? Me diga o tipo de calçado, a cor ou a numeração que você procura.');return}
+   if(/(valor|preco|quanto custa|modelo|sandalia|rasteira|tamanco|chinelo|comprar|basic|brilho|strass|cristal|preta|preto|nude|dourad|caramelo|branc|rosa|prata)/.test(s)||(/\b(3[4-9]|40)\b/.test(s)&&state.lastTopic!=='order')){await recommend(q);return}
+   if(/(tamanho|numero|numeracao|calca)/.test(s)){msg('Claro! Me diga o tipo de calçado e sua numeração, por exemplo: “rasteira básica 35”. Eu verifico os modelos, valores e tamanhos disponíveis para você.');state.lastTopic='size';return}
+   if(/(frete|entrega|cep|chega|prazo)/.test(s)){msg('O frete é calculado pelo CEP e fica grátis nas compras acima de R$ 200. Me diga seu CEP para eu continuar te orientando.');state.lastTopic='shipping';return}
+   if(state.lastTopic==='shipping'&&/\d{5}[- ]?\d{3}/.test(s)){msg('Obrigada! O valor e o prazo exatos são calculados antes da confirmação da compra. Acima de R$ 200 o frete fica grátis.');return}
+   if(/(pix|pagamento|pagar|cartao|dinheiro|qr)/.test(s)){msg('O pagamento é feito por PIX. Na finalização aparece o QR Code e o código Copia e Cola já com o valor correto do pedido.');state.lastTopic='payment';return}
+   if(/(pedido|acompanhar|status|rastre|onde esta)/.test(s)){msg('Me diga o número do pedido e o nome usado na compra. Não envie senha nem código do banco.');state.lastTopic='order';return}
+   if(state.lastTopic==='order'){msg('Obrigada. As atualizações desse pedido são enviadas para o e-mail cadastrado. Me diga também se ele está aguardando PIX, pago ou em preparação para eu te orientar.');return}
+   if(/(revenda|revendedora|revender)/.test(s)){msg('Para ser revendedora você cria seu usuário e senha, confirma o e-mail e aguarda a aprovação da Espaço Cris. Depois da liberação, já pode montar e enviar seus pedidos pelo catálogo de revenda.');state.lastTopic='reseller';return}
+   if(/(atendente|whatsapp|humano|pessoa|falar com cris)/.test(s)){msg('Pode falar comigo por aqui. Explique o que aconteceu e eu vou te orientar sem abrir outra página.');return}
+   if(/(obrigad|valeu)/.test(s)){msg('Eu que agradeço! 💗 Quando precisar, pode me chamar.');return}
+   if(/^(sim|gostei|esse|essa|primeiro|segundo|terceiro|quarto|[1-4])$/.test(s)&&state.lastTopic==='product'){msg('Ótima escolha! Qual numeração você usa e quantos pares deseja?');state.lastTopic='size';return}
+   msg('Quero entender direitinho para não repetir informação. Me diga em uma frase o produto, a cor e a numeração. Exemplo: “rasteira nude número 35”.');
+ }
+ function ask(q){msg(q,'user');const t=typing();const delay=Math.min(1800,750+q.length*18);setTimeout(async()=>{try{await answer(q)}catch(e){msg('Desculpe, tive uma dificuldade para consultar os modelos agora. Tente me dizer novamente o tipo e a numeração.')}finally{t.remove();messages.scrollTop=messages.scrollHeight}},delay)}
  launch.onclick=()=>{win.classList.toggle('hidden');launch.querySelector('.chat-dot').style.display='none';greeting();if(!win.classList.contains('hidden'))setTimeout(()=>input.focus(),100)};
  close.onclick=()=>win.classList.add('hidden');
  form.onsubmit=e=>{e.preventDefault();const q=input.value.trim();if(!q)return;input.value='';ask(q)};
