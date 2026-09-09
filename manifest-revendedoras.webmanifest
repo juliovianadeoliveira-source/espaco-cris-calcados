@@ -1,0 +1,25 @@
+{
+  "id": "/revendedoras-app",
+  "name": "Espaço Cris Revendedoras",
+  "short_name": "Cris Revendas",
+  "description": "Catálogo e pedidos das revendedoras Espaço Cris.",
+  "lang": "pt-BR",
+  "start_url": "/catalogo/?app=revendedoras",
+  "scope": "/catalogo/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fff8fb",
+  "theme_color": "#6b1034",
+  "categories": [
+    "business",
+    "shopping"
+  ],
+  "icons": [
+    {
+      "src": "/icons/espaco-cris-revendedoras.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
