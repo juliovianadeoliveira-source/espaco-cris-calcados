@@ -1,0 +1,24 @@
+{
+  "id": "/loja-app",
+  "name": "Espaço Cris Calçados",
+  "short_name": "Espaço Cris",
+  "description": "Loja oficial Espaço Cris Calçados.",
+  "lang": "pt-BR",
+  "start_url": "/index.html?app=loja",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fff8fb",
+  "theme_color": "#8f1748",
+  "categories": [
+    "shopping"
+  ],
+  "icons": [
+    {
+      "src": "/icons/espaco-cris-loja.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
