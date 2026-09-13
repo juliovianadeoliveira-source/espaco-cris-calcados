@@ -4,6 +4,7 @@
  */
 const SUPABASE_URL = "https://nnhljxmmrqekoxcapdkm.supabase.co";
 const SUPABASE_KEY = "sb_publishable_mPNEE_t2HTfU5f2rUDwrig_u9ls7HrE";
+const SITE_URL = "https://espacocriscalcados.shop";
 let products = [];
 const money = value => Number(value || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
@@ -41,7 +42,8 @@ function renderProducts(items) {
     items.forEach(product=>{
         const card=document.createElement('article');
         card.className='card product-card';
-        card.innerHTML=`<a href="produto.html?id=${encodeURIComponent(product.id)}" class="product-link" aria-label="Ver ${String(product.name).replace(/"/g,'&quot;')}">
+        const productUrl = `${SITE_URL}/produto.html?id=${encodeURIComponent(product.id)}`;
+        card.innerHTML=`<a href="${productUrl}" class="product-link" aria-label="Ver ${String(product.name).replace(/"/g,'&quot;')}">
             <div class="pic"><img src="${product.image}" alt="${String(product.name).replace(/"/g,'&quot;')}" loading="lazy" onerror="this.src='https://via.placeholder.com/600x600?text=Imagem'"></div>
             <div class="card-info product-info"><div class="card-cat">Espaço Cris</div><div class="card-name product-title">${product.name}</div><div class="price product-price">${money(product.price)}</div><div class="details">Ver detalhes</div></div>
         </a>`;
