@@ -93,7 +93,11 @@ const offer=$('#offer');$('#closeOffer').onclick=()=>offer.classList.add('hidden
  const reais=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
  function msg(text,who='bot'){const d=document.createElement('div');d.className='chat-msg '+who;d.textContent=text;messages.appendChild(d);messages.scrollTop=messages.scrollHeight}
  function typing(){const d=document.createElement('div');d.className='chat-typing';d.setAttribute('aria-label','Cris está digitando');d.innerHTML='<i></i><i></i><i></i>';messages.appendChild(d);messages.scrollTop=messages.scrollHeight;return d}
- function greeting(){if(messages.children.length)return;msg('Oi! Eu sou a Cris, da Espaço Cris Calçados. 😊 Que bom ter você aqui! Me fala o modelo, a cor ou a numeração que você procura.')}
+ function mainMenu(prefix){
+   state.lastTopic='main_menu';
+   msg((prefix||'Oi! Eu sou a Cris, da Espaço Cris Calçados. 😊')+'\n\nComo posso te ajudar hoje? Digite o número da opção desejada:\n\n1️⃣ Encontrar um produto\n2️⃣ Consultar tamanho e numeração\n3️⃣ Frete e entrega\n4️⃣ Pagamento por PIX\n5️⃣ Acompanhar meu pedido\n6️⃣ Quero ser revendedora');
+ }
+ function greeting(){if(messages.children.length)return;mainMenu('Oi! Eu sou a Cris, da Espaço Cris Calçados. 😊 Que bom ter você aqui!')}
  function allProducts(){try{return typeof products!=='undefined'&&Array.isArray(products)?products:[]}catch(e){return[]}}
  function salePrice(p){const promo=Number(p.preco_promocional||0),normal=Number(p.preco||0);return promo>0&&promo<normal?promo:normal}
  async function sizesFor(ids,size){
@@ -150,6 +154,14 @@ const offer=$('#offer');$('#closeOffer').onclick=()=>offer.classList.add('hidden
    if(state.lastTopic==='choose_product'&&number>=1&&number<=state.lastProducts.length){await chooseProduct(number);return}
    if(state.lastTopic==='choose_size'&&/^(3[4-9]|40)$/.test(s)){await chooseSize(s);return}
    if(state.lastTopic==='choose_qty'&&number){chooseQty(number);return}
+   if(state.lastTopic==='main_menu'&&number>=1&&number<=6){
+     if(number===1){state.lastTopic='product_help';msg('Claro! 😊 Me diga qual modelo você procura, a cor e a numeração. Exemplo: “rasteira preta número 35”.');return}
+     if(number===2){state.lastTopic='size';msg('Vamos conferir! Me diga o tipo de calçado e sua numeração. Exemplo: “sandália número 36”.');return}
+     if(number===3){state.lastTopic='shipping';msg('Eu te ajudo com a entrega. 🚚 Digite seu CEP para consultar. Lembrando: o frete é grátis nas compras acima de R$ 149,90.');return}
+     if(number===4){state.lastTopic='payment';msg('O pagamento é feito por PIX. Na finalização do pedido aparecem o QR Code e o código Copia e Cola com o valor certinho. Se tiver outra dúvida sobre o pagamento, pode me perguntar.');return}
+     if(number===5){state.lastTopic='order';msg('Vamos verificar seu pedido. Me informe o número do pedido e o nome usado na compra. Não envie senha nem código do banco.');return}
+     if(number===6){state.lastTopic='reseller';msg('Que bom saber do seu interesse! 💗 Para ser revendedora, você cria seu usuário e senha, confirma o e-mail e aguarda a aprovação. Depois da liberação, já pode montar pedidos pelo catálogo de revenda.');return}
+   }
    if(state.lastTopic==='confirm_item'&&/^(sim|s|certo|correto|confirmo|pode)$/.test(s)){state.lastTopic='confirmed';msg('Perfeito! Guardei exatamente esse modelo, tamanho e quantidade. Para continuar o atendimento, me diga o nome completo de quem vai receber o pedido.');return}
    if(state.lastTopic==='confirm_item'&&/^(nao|não|n|errado|corrigir)$/.test(s)){state.lastTopic='choose_product';msg('Sem problema. O que deseja corrigir: produto, tamanho ou quantidade?');return}
    if(state.lastTopic==='confirmed'&&q.length>3){state.name=q;state.lastTopic='customer_name';msg('Obrigada, '+q+'. Agora me diga o telefone com DDD para eu continuar o atendimento.');return}
@@ -157,7 +169,7 @@ const offer=$('#offer');$('#closeOffer').onclick=()=>offer.classList.add('hidden
    if(state.lastTopic==='customer_phone'&&/^\d{5}-?\d{3}$/.test(q.replace(/\s/g,''))){state.lastTopic='customer_cep';msg('Obrigada. Já tenho o produto, tamanho, quantidade, nome, telefone e CEP. Para sua segurança, a confirmação final e o PIX só são gerados no fechamento oficial do pedido.');return}
    const nameMatch=q.match(/(?:meu nome [ée]|me chamo|sou a?|sou o)\s+([A-Za-zÀ-ÿ]{2,}(?:\s+[A-Za-zÀ-ÿ]{2,})?)/i);
    if(nameMatch){state.name=nameMatch[1];msg('Prazer, '+state.name+'! 😊 Me fala o modelo, a cor e a numeração que você procura.');return}
-   if(/^(oi|ola|oie|bom dia|boa tarde|boa noite)[!. ]*$/.test(s)){msg('Oi'+(state.name?', '+state.name:'')+'! Tudo bem? O que você está procurando hoje?');return}
+   if(/^(oi+|ola+|oie+|opa|bom dia|boa tarde|boa noite|tudo bem)[!?. ]*$/.test(s)){mainMenu('Oi'+(state.name?', '+state.name:'')+'! Tudo bem? 😊 Que bom falar com você!');return}
    if(/(valor|preco|quanto custa|modelo|sandalia|rasteira|tamanco|chinelo|comprar|basic|brilho|strass|cristal|preta|preto|nude|dourad|caramelo|branc|rosa|prata)/.test(s)||(/\b(3[4-9]|40)\b/.test(s)&&state.lastTopic!=='order')){await recommend(q);return}
    if(/(tamanho|numero|numeracao|calca)/.test(s)){msg('Me diga o tipo de calçado e a numeração, por exemplo: “rasteira básica 35”. Eu verifico os modelos e valores disponíveis.');state.lastTopic='size';return}
    if(/(frete|entrega|cep|chega|prazo)/.test(s)){msg('O frete é calculado pelo CEP e fica grátis nas compras acima de R$ 149,90. Me diga seu CEP para eu continuar te orientando.');state.lastTopic='shipping';return}
@@ -167,7 +179,7 @@ const offer=$('#offer');$('#closeOffer').onclick=()=>offer.classList.add('hidden
    if(state.lastTopic==='order'){msg('Obrigada. As atualizações são enviadas para o e-mail cadastrado. O pedido está aguardando PIX, pago ou em preparação?');return}
    if(/(revenda|revendedora|revender)/.test(s)){msg('Para ser revendedora você cria usuário e senha, confirma o e-mail e aguarda a aprovação. Depois da liberação, pode montar e enviar pedidos pelo catálogo de revenda.');state.lastTopic='reseller';return}
    if(/(obrigad|valeu)/.test(s)){msg('Eu que agradeço! 💗 Quando precisar, pode me chamar.');return}
-   msg('Não entendi totalmente. Me diga o produto, a cor e a numeração que você procura, ou pergunte sobre frete, pagamento ou pedido.');
+   mainMenu('Desculpe, não entendi direitinho. 😊 Escolha uma das opções abaixo para eu te ajudar:');
  }
  function ask(q){msg(q,'user');const t=typing();const delay=Math.min(1800,750+q.length*18);setTimeout(async()=>{try{await answer(q)}catch(e){msg('Desculpe, tive uma dificuldade para consultar os modelos agora. Tente me dizer novamente o tipo e a numeração.')}finally{t.remove();messages.scrollTop=messages.scrollHeight}},delay)}
  launch.onclick=()=>{win.classList.toggle('hidden');launch.querySelector('.chat-dot').style.display='none';greeting();if(!win.classList.contains('hidden'))setTimeout(()=>input.focus(),100)};
